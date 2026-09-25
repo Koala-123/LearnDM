@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-cosmic-950 text-slate-100 min-h-screen overflow-x-hidden selection:bg-neon-purple/30 selection:text-white;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  }
+}
+
+/* Custom Cosmic Scrollbars */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0e1a;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(168, 85, 247, 0.3);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(168, 85, 247, 0.6);
+}
+
+/* KaTeX tweaks for crisp mathematical display in dark mode */
+.katex {
+  font-size: 1.05em !important;
+  color: #f1f5f9;
+}
+.katex-display {
+  margin: 0.6em 0 !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.3em 0;
+}
+
+/* Tactile push button effects */
+.btn-arcade {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.btn-arcade:active {
+  transform: translateY(2px);
+}
+
+/* Subtle cosmic grid background */
+.cosmic-grid {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}

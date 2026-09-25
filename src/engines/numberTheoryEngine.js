@@ -78,7 +78,7 @@ export function modularInverse(a, m) {
   if (ext.gcd !== 1) {
     return {
       exists: false,
-      reason: `\\gcd(${a}, ${m}) = ${ext.gcd} \\ne 1. Inverse does not exist.`,
+      reason: `$\\gcd(${a}, ${m}) = ${ext.gcd} \\ne 1$. Inverse does not exist.`,
     };
   }
   // Make sure result is in [0, m-1]
@@ -97,7 +97,7 @@ export function solveLinearCongruence(a, b, m) {
   if (b % gcd !== 0) {
     return {
       solvable: false,
-      reason: `\\gcd(${a}, ${m}) = ${gcd}, which does not divide ${b}. No solutions exist.`,
+      reason: `$\\gcd(${a}, ${m}) = ${gcd}$, which does not divide $${b}$. No solutions exist.`,
     };
   }
 
@@ -132,7 +132,7 @@ export function solveCRT(congruences) {
       if (g !== 1) {
         return {
           valid: false,
-          error: `Moduli m_${i+1}=${congruences[i].m} and m_${j+1}=${congruences[j].m} are not coprime (gcd = ${g}).`,
+          error: `Moduli $m_${i+1} = ${congruences[i].m}$ and $m_${j+1} = ${congruences[j].m}$ are not coprime ($\\gcd = ${g}$).`,
         };
       }
     }
@@ -194,7 +194,7 @@ export function fastModularExponentiation(base, exp, mod) {
       power: binaryExp.length - 1 - i,
       basePower: b,
       calculatedResult: result,
-      action: bit === '1' ? `Multiply: (${prevResult} * ${b}) mod ${mod} = ${result}` : `Bit 0: skip multiply`,
+      action: bit === '1' ? `Multiply: $(${prevResult} \\times ${b}) \\equiv ${result} \\pmod{${mod}}$` : `Bit 0: skip multiply`,
     });
     b = (b * b) % mod;
   }

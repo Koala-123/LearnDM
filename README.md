@@ -2,7 +2,7 @@
 ### Interactive Discrete Mathematics Workbench & Question Solver
 **Cosmic Cyber Pop Edition (Option B)**
 
-An interactive, gamified, high-performance web application designed specifically for the **Plaksha University Discrete Mathematics** course (Semester 3, 2026–2027; Instructors: Dr. Saeed Salehi & Dr. Sushant Vijayan), strictly aligned with **Ralph P. Grimaldi (5th Ed.)** and **Gerard O'Regan (Springer)**.
+An interactive, gamified, high-performance web application designed for mastering Discrete Mathematics through deep intuition, interactive visual labs, and comprehensive problem sets.
 
 ---
 

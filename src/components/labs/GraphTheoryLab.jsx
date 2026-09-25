@@ -85,7 +85,7 @@ export default function GraphTheoryLab({ initialData }) {
       {/* Preset Buttons & Controls */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">Presets:</span>
+          <span className="text-xs sm:text-sm text-slate-400 font-bold uppercase tracking-wider">Presets:</span>
           {[
             { id: 'Petersen', label: 'Petersen Graph' },
             { id: 'K5', label: 'K₅ (Complete 5)' },
@@ -95,7 +95,7 @@ export default function GraphTheoryLab({ initialData }) {
             <button
               key={p.id}
               onClick={() => setPreset(p.id)}
-              className={`btn-arcade px-3 py-1 text-xs rounded-full border transition ${
+              className={`btn-arcade px-3.5 py-1.5 text-xs sm:text-sm rounded-full border transition ${
                 preset === p.id
                   ? 'bg-neon-mint text-cosmic-950 font-extrabold shadow-glow-mint border border-neon-mint'
                   : 'bg-cosmic-950/80 border-cosmic-750 text-slate-400 hover:text-white'
@@ -107,7 +107,7 @@ export default function GraphTheoryLab({ initialData }) {
         </div>
         <button
           onClick={clearCanvas}
-          className="btn-arcade px-3 py-1 text-xs rounded-full bg-cosmic-950 border border-cosmic-750 text-neon-pink hover:border-neon-pink transition"
+          className="btn-arcade px-3.5 py-1.5 text-xs sm:text-sm rounded-full bg-cosmic-950 border border-cosmic-750 text-neon-pink hover:border-neon-pink transition font-semibold"
         >
           Clear Canvas
         </button>
@@ -116,27 +116,27 @@ export default function GraphTheoryLab({ initialData }) {
       {/* Metrics Banner */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="p-3.5 rounded-2xl bg-cosmic-900/90 border border-cosmic-750 text-center">
-          <span className="text-[10px] uppercase font-bold text-slate-400 block">
-            Vertices |V| & Edges |E|
+          <span className="text-xs uppercase font-bold text-slate-400 block">
+            <MathView text="Vertices $|V|$ & Edges $|E|$" />
           </span>
-          <span className="text-sm font-mono font-bold text-neon-cyan">
-            |V| = {analysis.vertexCount}, |E| = {analysis.edgeCount}
+          <span className="text-sm sm:text-base font-mono font-bold text-neon-cyan mt-1 block">
+            <MathView math={`|V| = ${analysis.vertexCount}, \\; |E| = ${analysis.edgeCount}`} />
           </span>
         </div>
         <div className="p-3.5 rounded-2xl bg-cosmic-900/90 border border-cosmic-750 text-center">
-          <span className="text-[10px] uppercase font-bold text-slate-400 block">
+          <span className="text-xs uppercase font-bold text-slate-400 block">
             Handshaking Sum
           </span>
-          <span className="text-xs font-mono font-bold text-neon-mint mt-0.5 block">
-            ∑ deg = {analysis.totalDegree} = 2({analysis.edgeCount}) ✓
+          <span className="text-xs sm:text-sm font-mono font-bold text-neon-mint mt-1 block">
+            <MathView math={`\\sum \\deg(v) = ${analysis.totalDegree} = 2(${analysis.edgeCount})`} />
           </span>
         </div>
         <div className="p-3.5 rounded-2xl bg-cosmic-900/90 border border-cosmic-750 text-center">
-          <span className="text-[10px] uppercase font-bold text-slate-400 block">
+          <span className="text-xs uppercase font-bold text-slate-400 block">
             Bipartite Status
           </span>
           <span
-            className={`text-xs font-bold flex items-center justify-center gap-1 mt-0.5 ${
+            className={`text-xs sm:text-sm font-bold flex items-center justify-center gap-1 mt-0.5 ${
               analysis.isBipartite ? 'text-neon-mint' : 'text-neon-pink'
             }`}
           >
@@ -145,15 +145,20 @@ export default function GraphTheoryLab({ initialData }) {
           </span>
         </div>
         <div className="p-3.5 rounded-2xl bg-cosmic-900/90 border border-cosmic-750 text-center">
-          <span className="text-[10px] uppercase font-bold text-slate-400 block">
+          <span className="text-xs uppercase font-bold text-slate-400 block">
             Tree Status
           </span>
           <span
-            className={`text-xs font-bold flex items-center justify-center gap-1 mt-0.5 ${
+            className={`text-xs sm:text-sm font-bold flex items-center justify-center gap-1 mt-0.5 ${
               analysis.isTree ? 'text-neon-mint' : 'text-neon-gold'
             }`}
           >
-            {analysis.isTree ? 'Is a Tree (|E|=V-1)' : 'Not a Tree'}
+            {analysis.isTree ? <Check className="w-3.5 h-3.5" /> : <X className="w-3.5 h-3.5" />}
+            {analysis.isTree ? (
+              <MathView text="Is a Tree ($|E| = |V| - 1$)" />
+            ) : (
+              'Not a Tree'
+            )}
           </span>
         </div>
       </div>
@@ -163,10 +168,10 @@ export default function GraphTheoryLab({ initialData }) {
         {/* Canvas Card */}
         <div className="bg-cosmic-900/90 p-5 rounded-3xl border border-cosmic-750 flex flex-col items-center">
           <div className="w-full flex items-center justify-between mb-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-neon-cyan">
+            <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neon-cyan">
               Interactive Canvas
             </span>
-            <span className="text-[11px] text-slate-400">
+            <span className="text-xs text-slate-400">
               Click blank space to add node • Click 2 nodes to draw edge
             </span>
           </div>
@@ -226,7 +231,7 @@ export default function GraphTheoryLab({ initialData }) {
                     y={v.y + 4}
                     textAnchor="middle"
                     fill="#ffffff"
-                    fontSize="10"
+                    fontSize="11"
                     fontFamily="Space Mono"
                     fontWeight="bold"
                   >
@@ -242,20 +247,20 @@ export default function GraphTheoryLab({ initialData }) {
         <div className="space-y-4">
           {/* Degree Sequence & Eulerian */}
           <div className="bg-cosmic-900/90 p-5 rounded-3xl border border-cosmic-750 space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-neon-purple">
+            <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neon-purple">
               Degree Sequence & Eulerian Classification
             </h4>
-            <div className="flex flex-wrap gap-1.5 text-xs font-mono">
+            <div className="flex flex-wrap gap-1.5 text-xs sm:text-sm font-mono">
               {analysis.degreeSequence.map((d) => (
                 <span
                   key={d.id}
-                  className="px-2.5 py-1 rounded-xl bg-cosmic-950 border border-cosmic-750 text-slate-300"
+                  className="px-3 py-1.5 rounded-xl bg-cosmic-950 border border-cosmic-750 text-slate-300"
                 >
-                  v_{d.id}: deg={d.deg}
+                  <MathView math={`v_{${d.id}}: \\deg = ${d.deg}`} />
                 </span>
               ))}
             </div>
-            <div className="p-3 rounded-2xl bg-cosmic-950/80 border border-cosmic-750 text-xs">
+            <div className="p-3.5 rounded-2xl bg-cosmic-950/80 border border-cosmic-750 text-xs sm:text-sm">
               <span className="font-bold text-slate-400 block mb-0.5">Eulerian Result:</span>
               <span className="text-neon-mint font-mono font-bold">{analysis.eulerianStatus}</span>
             </div>
@@ -263,20 +268,20 @@ export default function GraphTheoryLab({ initialData }) {
 
           {/* Planarity Diagnostics */}
           <div className="bg-cosmic-900/90 p-5 rounded-3xl border border-cosmic-750 space-y-2">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-neon-cyan">
-              Planar Formula & Bounds (Euler: V - E + F = 2)
+            <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neon-cyan">
+              <MathView text="Planar Formula & Bounds (Euler: $V - E + F = 2$)" />
             </h4>
-            <div className="text-xs text-slate-300 space-y-1">
-              <p>
-                Faces <MathView math="F = E - V + 2" /> ={' '}
-                <span className="font-mono font-bold text-neon-mint">{analysis.planarFaces}</span>
-              </p>
+            <div className="text-xs sm:text-sm text-slate-300 space-y-1">
+              <div className="flex items-center gap-1.5">
+                <span className="font-bold">Faces:</span>
+                <MathView math={`F = E - V + 2 = ${analysis.planarFaces}`} />
+              </div>
               {analysis.planarViolated ? (
-                <div className="p-3 rounded-2xl bg-neon-pink/15 border border-neon-pink/40 text-neon-pink text-xs mt-1">
-                  ⚠️ {analysis.planarReason}
+                <div className="p-3.5 rounded-2xl bg-neon-pink/15 border border-neon-pink/40 text-neon-pink text-xs sm:text-sm mt-1">
+                  <MathView text={`⚠️ ${analysis.planarReason}`} />
                 </div>
               ) : (
-                <p className="text-[11px] text-neon-mint">
+                <p className="text-xs sm:text-sm text-neon-mint">
                   Satisfies planar necessary edge bound <MathView math="E \le 3V - 6" />.
                 </p>
               )}
@@ -286,14 +291,14 @@ export default function GraphTheoryLab({ initialData }) {
           {/* Kruskal MST Result */}
           <div className="bg-cosmic-900/90 p-5 rounded-3xl border border-cosmic-750 space-y-2">
             <div className="flex items-center justify-between">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-neon-mint">
+              <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neon-mint">
                 Kruskal's Minimum Spanning Tree
               </h4>
-              <span className="text-xs font-mono font-bold text-neon-mint">
+              <span className="text-sm font-mono font-bold text-neon-mint">
                 MST Weight = {kruskalResult.totalWeight}
               </span>
             </div>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-xs sm:text-sm text-slate-300">
               Edges highlighted in <span className="text-neon-mint font-bold">mint green</span> on the canvas form the minimum spanning tree.
             </p>
           </div>

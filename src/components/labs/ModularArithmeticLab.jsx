@@ -96,7 +96,7 @@ export default function ModularArithmeticLab({ initialData }) {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`btn-arcade px-3 py-1.5 rounded-full text-xs font-semibold tracking-wider transition ${
+            className={`btn-arcade px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold tracking-wider transition ${
               activeTab === tab.id
                 ? 'bg-neon-pink text-white shadow-glow-pink font-bold border border-neon-pink'
                 : 'text-slate-400 hover:text-white bg-cosmic-950/60 border border-cosmic-750'
@@ -112,8 +112,8 @@ export default function ModularArithmeticLab({ initialData }) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           {/* Left: Clock Visualizer */}
           <div className="lg:col-span-6 flex flex-col items-center justify-center p-6 bg-cosmic-950/90 rounded-3xl border border-cosmic-750 relative overflow-hidden">
-            <div className="absolute top-2 left-4 text-[10px] font-mono uppercase text-neon-cyan font-bold tracking-wider">
-              Residue Ring ℤ/{nVal}ℤ
+            <div className="absolute top-2 left-4 text-xs font-mono uppercase text-neon-cyan font-bold tracking-wider">
+              <MathView math={`\\text{Residue Ring } \\mathbb{Z}/${nVal}\\mathbb{Z}`} />
             </div>
 
             {/* SVG Modular Clock Ring */}
@@ -174,7 +174,7 @@ export default function ModularArithmeticLab({ initialData }) {
                         y={y + 3.5}
                         textAnchor="middle"
                         fill={isCurrent ? '#ffffff' : '#94a3b8'}
-                        fontSize={isCurrent ? '11' : '9'}
+                        fontSize={isCurrent ? '12' : '10'}
                         fontFamily="Space Mono"
                         fontWeight="bold"
                       >
@@ -188,14 +188,14 @@ export default function ModularArithmeticLab({ initialData }) {
 
             {/* Invariant Equation Readout */}
             <div className="w-full mt-2 p-3 rounded-2xl bg-cosmic-900 border border-neon-cyan/30 text-center">
-              <div className="text-[11px] font-mono text-slate-400">
+              <div className="text-xs font-mono text-slate-400">
                 Division Algorithm Identity:
               </div>
-              <div className="text-base font-mono font-bold text-neon-cyan mt-0.5">
-                {aVal} = ({quotient}) × {nVal} + <span className="text-neon-pink underline">{canonicalRemainder}</span>
+              <div className="text-base sm:text-lg font-mono font-bold text-neon-cyan mt-0.5">
+                <MathView math={`${aVal} = (${quotient}) \\times ${nVal} + ${canonicalRemainder}`} />
               </div>
-              <div className="text-xs text-neon-mint mt-1">
-                Canonical: <span className="font-mono font-bold">{aVal} ≡ {canonicalRemainder} (mod {nVal})</span>
+              <div className="text-xs sm:text-sm text-neon-mint mt-1">
+                Canonical: <MathView math={`${aVal} \\equiv ${canonicalRemainder} \\pmod{${nVal}}`} />
               </div>
             </div>
           </div>
@@ -204,15 +204,15 @@ export default function ModularArithmeticLab({ initialData }) {
           <div className="lg:col-span-6 space-y-4">
             {/* Input Config */}
             <div className="p-5 rounded-3xl bg-cosmic-900/90 border border-cosmic-750 space-y-4">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-neon-purple flex items-center gap-2">
+              <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neon-purple flex items-center gap-2">
                 <Sparkles className="w-4 h-4" />
                 Clock & Residue Parameters
               </h4>
 
               <div className="space-y-3">
                 <div>
-                  <div className="flex items-center justify-between text-xs text-slate-300 mb-1">
-                    <span>Modulus $n$ (Clock Size):</span>
+                  <div className="flex items-center justify-between text-xs sm:text-sm text-slate-300 mb-1">
+                    <MathView text="Modulus $n$ (Clock Size):" />
                     <span className="font-mono font-bold text-neon-purple">{nVal}</span>
                   </div>
                   <input
@@ -221,9 +221,9 @@ export default function ModularArithmeticLab({ initialData }) {
                     max="24"
                     value={clockN}
                     onChange={(e) => setClockN(Number(e.target.value))}
-                    className="w-full accent-neon-purple cursor-pointer"
+                    className="w-full accent-neon-purple cursor-pointer h-2 bg-cosmic-950 rounded-lg"
                   />
-                  <div className="flex gap-2 mt-2">
+                  <div className="flex flex-wrap gap-2 mt-2">
                     {[
                       { label: 'Clock n=12', val: 12 },
                       { label: 'Prime n=7', val: 7 },
@@ -233,9 +233,9 @@ export default function ModularArithmeticLab({ initialData }) {
                       <button
                         key={p.val}
                         onClick={() => setClockN(p.val)}
-                        className={`btn-arcade px-2.5 py-1 rounded-full text-[10px] font-mono border ${
+                        className={`btn-arcade px-3 py-1 rounded-full text-xs font-mono border ${
                           clockN === p.val
-                            ? 'bg-neon-purple/20 text-neon-purple border-neon-purple'
+                            ? 'bg-neon-purple/20 text-neon-purple border-neon-purple font-bold'
                             : 'bg-cosmic-950 border-cosmic-750 text-slate-400'
                         }`}
                       >
@@ -246,8 +246,8 @@ export default function ModularArithmeticLab({ initialData }) {
                 </div>
 
                 <div>
-                  <div className="flex items-center justify-between text-xs text-slate-300 mb-1">
-                    <span>Dividend Integer $a$:</span>
+                  <div className="flex items-center justify-between text-xs sm:text-sm text-slate-300 mb-1">
+                    <MathView text="Dividend Integer $a$:" />
                     <span className="font-mono font-bold text-neon-pink">{aVal}</span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -255,11 +255,11 @@ export default function ModularArithmeticLab({ initialData }) {
                       type="number"
                       value={clockA}
                       onChange={(e) => setClockA(Number(e.target.value))}
-                      className="flex-1 bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-1.5 text-sm font-mono text-neon-pink focus:outline-none focus:border-neon-pink"
+                      className="flex-1 bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-2 text-sm sm:text-base font-mono text-neon-pink focus:outline-none focus:border-neon-pink"
                     />
                     <button
                       onClick={() => setIsSpinning(!isSpinning)}
-                      className={`btn-arcade px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 ${
+                      className={`btn-arcade px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-1.5 ${
                         isSpinning
                           ? 'bg-neon-pink text-white shadow-glow-pink'
                           : 'bg-cosmic-950 border border-cosmic-750 text-slate-300 hover:text-white'
@@ -276,14 +276,14 @@ export default function ModularArithmeticLab({ initialData }) {
                       <button
                         key={step}
                         onClick={() => setClockA((prev) => prev + step)}
-                        className="btn-arcade flex-1 py-1 rounded-lg bg-cosmic-950/80 border border-cosmic-750 text-xs font-mono text-slate-300 hover:border-neon-cyan hover:text-neon-cyan"
+                        className="btn-arcade flex-1 py-1.5 rounded-lg bg-cosmic-950/80 border border-cosmic-750 text-xs sm:text-sm font-mono text-slate-300 hover:border-neon-cyan hover:text-neon-cyan"
                       >
                         {step > 0 ? `+${step}` : step}
                       </button>
                     ))}
                     <button
                       onClick={() => setClockA(0)}
-                      className="btn-arcade px-2 py-1 rounded-lg bg-cosmic-950/80 border border-cosmic-750 text-xs text-slate-400 hover:text-white"
+                      className="btn-arcade px-3 py-1.5 rounded-lg bg-cosmic-950/80 border border-cosmic-750 text-xs sm:text-sm text-slate-400 hover:text-white"
                       title="Reset to 0"
                     >
                       <RotateCcw className="w-3.5 h-3.5" />
@@ -294,8 +294,8 @@ export default function ModularArithmeticLab({ initialData }) {
             </div>
 
             {/* Mathematical Interpretation */}
-            <div className="p-4 rounded-2xl bg-cosmic-950/80 border border-cosmic-750 text-xs text-slate-300 space-y-1.5">
-              <div className="font-bold text-neon-gold uppercase tracking-wider text-[10px]">
+            <div className="p-4 rounded-2xl bg-cosmic-950/80 border border-cosmic-750 text-xs sm:text-sm text-slate-300 space-y-1.5">
+              <div className="font-bold text-neon-gold uppercase tracking-wider text-xs">
                 Geometric Clock Property
               </div>
               <p className="leading-relaxed">
@@ -312,11 +312,13 @@ export default function ModularArithmeticLab({ initialData }) {
           <div className="bg-cosmic-900/90 p-5 rounded-3xl border border-cosmic-750">
             <h4 className="text-xs font-bold uppercase tracking-wider text-neon-pink mb-3 flex items-center gap-2">
               <Calculator className="w-4 h-4" />
-              Input Integers a and b (Compute gcd & Bézout)
+              <MathView text="Input Integers $a$ and $b$ (Compute $\\gcd$ & Bézout)" />
             </h4>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-xs text-slate-400 block mb-1">Integer a</label>
+                <label className="text-xs text-slate-400 block mb-1">
+                  <MathView text="Integer $a$" />
+                </label>
                 <input
                   type="number"
                   value={numA}
@@ -325,7 +327,9 @@ export default function ModularArithmeticLab({ initialData }) {
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-400 block mb-1">Integer b</label>
+                <label className="text-xs text-slate-400 block mb-1">
+                  <MathView text="Integer $b$" />
+                </label>
                 <input
                   type="number"
                   value={numB}
@@ -339,36 +343,35 @@ export default function ModularArithmeticLab({ initialData }) {
           {/* Results Summary */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="p-5 rounded-3xl bg-cosmic-900/90 border border-cosmic-750 space-y-2">
-              <span className="text-xs uppercase font-bold text-neon-mint flex items-center gap-1.5">
+              <span className="text-xs sm:text-sm uppercase font-bold text-neon-mint flex items-center gap-1.5">
                 <Check className="w-4 h-4" />
-                Bézout's Identity: sa + tb = gcd(a, b)
+                <MathView text="Bézout's Identity: $s \\cdot a + t \\cdot b = \\gcd(a, b)$" />
               </span>
-              <div className="text-sm font-mono text-emerald-400 py-1">
+              <div className="text-base font-mono text-emerald-400 py-1">
                 <MathView math={`\\gcd(${numA}, ${numB}) = ${extResult.gcd}`} display />
                 <MathView math={extResult.identity} display />
               </div>
-              <p className="text-xs text-slate-400">
-                Coefficients: <span className="font-mono text-neon-cyan">s = {extResult.s}</span>,{' '}
-                <span className="font-mono text-neon-cyan">t = {extResult.t}</span>
-              </p>
+              <div className="text-xs sm:text-sm text-slate-300">
+                <MathView text={`Coefficients: $s = ${extResult.s}$, $t = ${extResult.t}$`} />
+              </div>
             </div>
 
             <div className="p-5 rounded-3xl bg-cosmic-900/90 border border-cosmic-750 space-y-2">
-              <span className="text-xs uppercase font-bold text-neon-purple flex items-center gap-1.5">
+              <span className="text-xs sm:text-sm uppercase font-bold text-neon-purple flex items-center gap-1.5">
                 <Sparkles className="w-4 h-4" />
-                Modular Multiplicative Inverse <MathView math={`a^{-1} \\pmod b`} />
+                <span>Modular Multiplicative Inverse</span> <MathView math={`a^{-1} \\pmod b`} />
               </span>
               {modInvResult.exists ? (
-                <div className="text-xs text-emerald-400 space-y-1">
-                  <p className="text-sm font-mono font-bold text-neon-mint py-1">
+                <div className="text-sm text-emerald-400 space-y-1">
+                  <div className="text-base font-mono font-bold text-neon-mint py-1">
                     <MathView math={`(${numA})^{-1} \\equiv ${modInvResult.inverse} \\pmod{${numB}}`} />
-                  </p>
-                  <p className="text-slate-400 text-xs">
-                    Verification: <span className="font-mono text-neon-gold">{numA} × {modInvResult.inverse} = {numA * modInvResult.inverse} ≡ 1 mod {numB}</span>
-                  </p>
+                  </div>
+                  <div className="text-slate-300 text-xs sm:text-sm">
+                    <MathView text={`Verification: $${numA} \\times ${modInvResult.inverse} = ${numA * modInvResult.inverse} \\equiv 1 \\pmod{${numB}}$`} />
+                  </div>
                 </div>
               ) : (
-                <div className="text-xs text-rose-400 py-2">
+                <div className="text-sm text-rose-400 py-2">
                   <MathView text={modInvResult.reason} />
                 </div>
               )}
@@ -377,19 +380,19 @@ export default function ModularArithmeticLab({ initialData }) {
 
           {/* Extended Euclidean Table */}
           <div className="bg-cosmic-900/90 rounded-3xl border border-cosmic-750 p-5">
-            <h5 className="text-xs font-bold uppercase tracking-wider text-neon-cyan mb-3 flex items-center gap-2">
+            <h5 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neon-cyan mb-3 flex items-center gap-2">
               <Sparkles className="w-3.5 h-3.5" />
               Step-by-Step Back-Substitution Table
             </h5>
             <div className="overflow-x-auto">
-              <table className="w-full text-xs font-mono text-left">
+              <table className="w-full text-xs sm:text-sm font-mono text-left">
                 <thead>
                   <tr className="border-b border-cosmic-750 text-slate-400">
-                    <th className="py-2.5 px-3">Step k</th>
-                    <th className="py-2.5 px-3">Remainder $r_k$</th>
-                    <th className="py-2.5 px-3">Quotient $q_k$</th>
-                    <th className="py-2.5 px-3">Coeff $s_k$</th>
-                    <th className="py-2.5 px-3">Coeff $t_k$</th>
+                    <th className="py-2.5 px-3"><MathView text="Step $k$" /></th>
+                    <th className="py-2.5 px-3"><MathView text="Remainder $r_k$" /></th>
+                    <th className="py-2.5 px-3"><MathView text="Quotient $q_k$" /></th>
+                    <th className="py-2.5 px-3"><MathView text="Coeff $s_k$" /></th>
+                    <th className="py-2.5 px-3"><MathView text="Coeff $t_k$" /></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -413,35 +416,42 @@ export default function ModularArithmeticLab({ initialData }) {
       {activeTab === 'congruence' && (
         <div className="space-y-6">
           <div className="bg-cosmic-900/90 p-5 rounded-3xl border border-cosmic-750">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-neon-purple mb-3">
-              Solve Linear Congruence: <MathView math="a \\cdot x \\equiv b \\pmod m" />
+            <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neon-purple mb-3 flex items-center gap-2">
+              <span>Solve Linear Congruence:</span>
+              <MathView math="a \cdot x \equiv b \pmod m" />
             </h4>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label className="text-xs text-slate-400 block mb-1">Coefficient a</label>
+                <label className="text-xs sm:text-sm text-slate-300 block mb-1">
+                  <MathView text="Coefficient $a$" />
+                </label>
                 <input
                   type="number"
                   value={congA}
                   onChange={(e) => setCongA(e.target.value)}
-                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-1.5 text-xs font-mono text-neon-pink focus:outline-none focus:border-neon-pink"
+                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-2 text-sm font-mono text-neon-pink focus:outline-none focus:border-neon-pink"
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-400 block mb-1">Constant b</label>
+                <label className="text-xs sm:text-sm text-slate-300 block mb-1">
+                  <MathView text="Constant $b$" />
+                </label>
                 <input
                   type="number"
                   value={congB}
                   onChange={(e) => setCongB(e.target.value)}
-                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-1.5 text-xs font-mono text-neon-pink focus:outline-none focus:border-neon-pink"
+                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-2 text-sm font-mono text-neon-pink focus:outline-none focus:border-neon-pink"
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-400 block mb-1">Modulus m</label>
+                <label className="text-xs sm:text-sm text-slate-300 block mb-1">
+                  <MathView text="Modulus $m$" />
+                </label>
                 <input
                   type="number"
                   value={congM}
                   onChange={(e) => setCongM(e.target.value)}
-                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-1.5 text-xs font-mono text-neon-pink focus:outline-none focus:border-neon-pink"
+                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-2 text-sm font-mono text-neon-pink focus:outline-none focus:border-neon-pink"
                 />
               </div>
             </div>
@@ -450,26 +460,26 @@ export default function ModularArithmeticLab({ initialData }) {
           <div className="p-5 rounded-3xl bg-cosmic-900/90 border border-cosmic-750">
             {congResult.solvable ? (
               <div className="space-y-3">
-                <span className="text-xs font-bold uppercase tracking-wider text-neon-mint">
+                <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neon-mint">
                   ✓ Solution Found ({congResult.gcd} incongruent solution{congResult.gcd > 1 ? 's' : ''})
                 </span>
-                <div className="text-sm font-mono text-neon-cyan">
+                <div className="text-base font-mono text-neon-cyan">
                   <MathView math={congResult.generalForm} display />
                 </div>
                 <div className="flex flex-wrap gap-2 pt-2">
                   {congResult.solutions.map((sol, idx) => (
                     <span
                       key={idx}
-                      className="px-3 py-1.5 rounded-full bg-neon-purple/20 border border-neon-purple/40 text-xs font-mono font-bold text-neon-purple"
+                      className="px-3.5 py-1.5 rounded-full bg-neon-purple/20 border border-neon-purple/40 text-xs sm:text-sm font-mono font-bold text-neon-purple"
                     >
-                      x ≡ {sol} (mod {congM})
+                      <MathView math={`x \\equiv ${sol} \\pmod{${congM}}`} />
                     </span>
                   ))}
                 </div>
               </div>
             ) : (
-              <div className="text-xs text-neon-pink">
-                <MathView math={congResult.reason} />
+              <div className="text-sm text-neon-pink">
+                <MathView text={congResult.reason} />
               </div>
             )}
           </div>
@@ -480,13 +490,16 @@ export default function ModularArithmeticLab({ initialData }) {
       {activeTab === 'crt' && (
         <div className="space-y-6">
           <div className="bg-cosmic-900/90 p-5 rounded-3xl border border-cosmic-750 space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-neon-gold">
-              System of Linear Congruences: <MathView math="x \\equiv a_i \\pmod{m_i}" />
+            <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neon-gold flex items-center gap-2">
+              <span>System of Linear Congruences:</span>
+              <MathView math="x \equiv a_i \pmod{m_i}" />
             </h4>
             {crtRows.map((row, idx) => (
-              <div key={idx} className="flex items-center gap-3">
-                <span className="text-xs font-mono text-slate-500">Eq {idx + 1}:</span>
-                <span className="text-xs font-mono text-slate-300">x ≡</span>
+              <div key={idx} className="flex flex-wrap items-center gap-3">
+                <span className="text-xs sm:text-sm font-mono text-slate-400">Eq {idx + 1}:</span>
+                <span className="text-xs sm:text-sm font-mono text-slate-300">
+                  <MathView math="x \equiv" />
+                </span>
                 <input
                   type="number"
                   value={row.a}
@@ -495,9 +508,11 @@ export default function ModularArithmeticLab({ initialData }) {
                     next[idx].a = e.target.value;
                     setCrtRows(next);
                   }}
-                  className="w-20 bg-cosmic-950 border border-cosmic-750 rounded-xl px-2.5 py-1 text-xs font-mono text-neon-pink focus:outline-none focus:border-neon-pink"
+                  className="w-24 bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-1.5 text-sm font-mono text-neon-pink focus:outline-none focus:border-neon-pink"
                 />
-                <span className="text-xs font-mono text-slate-300">(mod</span>
+                <span className="text-xs sm:text-sm font-mono text-slate-300">
+                  <MathView text="$(\\text{mod}$" />
+                </span>
                 <input
                   type="number"
                   value={row.m}
@@ -506,9 +521,11 @@ export default function ModularArithmeticLab({ initialData }) {
                     next[idx].m = e.target.value;
                     setCrtRows(next);
                   }}
-                  className="w-20 bg-cosmic-950 border border-cosmic-750 rounded-xl px-2.5 py-1 text-xs font-mono text-neon-pink focus:outline-none focus:border-neon-pink"
+                  className="w-24 bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-1.5 text-sm font-mono text-neon-pink focus:outline-none focus:border-neon-pink"
                 />
-                <span className="text-xs font-mono text-slate-300">)</span>
+                <span className="text-xs sm:text-sm font-mono text-slate-300">
+                  <MathView text="$)$" />
+                </span>
               </div>
             ))}
           </div>
@@ -516,20 +533,20 @@ export default function ModularArithmeticLab({ initialData }) {
           <div className="p-5 rounded-3xl bg-cosmic-900/90 border border-cosmic-750">
             {crtResult.valid ? (
               <div className="space-y-3">
-                <span className="text-xs font-bold uppercase tracking-wider text-neon-mint">
-                  Unique CRT Solution Modulo M = {crtResult.M}
+                <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neon-mint">
+                  <MathView text={`Unique CRT Solution Modulo $M = ${crtResult.M}$`} />
                 </span>
-                <div className="text-base font-mono font-bold text-neon-mint py-1">
+                <div className="text-base sm:text-lg font-mono font-bold text-neon-mint py-1">
                   <MathView
                     math={`x \\equiv ${crtResult.solution} \\pmod{${crtResult.M}}`}
                     display
                   />
                 </div>
                 <div className="pt-2 border-t border-cosmic-750">
-                  <h6 className="text-[11px] uppercase font-bold text-neon-cyan mb-2">
+                  <h6 className="text-xs sm:text-sm uppercase font-bold text-neon-cyan mb-2">
                     Step-by-step CRT Coefficients
                   </h6>
-                  <div className="space-y-1.5 text-xs font-mono text-slate-300">
+                  <div className="space-y-1.5 text-xs sm:text-sm font-mono text-slate-300">
                     {crtResult.steps.map((s) => (
                       <div key={s.index} className="p-2.5 rounded-xl bg-cosmic-950 border border-cosmic-750">
                         Equation {s.index}: <MathView math={`M_${s.index} = ${s.Mi}, \\; y_${s.index} \\equiv (${s.Mi})^{-1} \\equiv ${s.yi} \\pmod{${s.mi}}, \\; \\text{term} = ${s.term}`} />
@@ -539,7 +556,9 @@ export default function ModularArithmeticLab({ initialData }) {
                 </div>
               </div>
             ) : (
-              <div className="text-xs text-neon-pink">{crtResult.error}</div>
+              <div className="text-sm text-neon-pink">
+                <MathView text={crtResult.error} />
+              </div>
             )}
           </div>
         </div>
@@ -549,35 +568,42 @@ export default function ModularArithmeticLab({ initialData }) {
       {activeTab === 'fastexp' && (
         <div className="space-y-6">
           <div className="bg-cosmic-900/90 p-5 rounded-3xl border border-cosmic-750">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-neon-cyan mb-3">
-              Compute Fast Modular Exponentiation: <MathView math="a^b \\pmod m" />
+            <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neon-cyan mb-3 flex items-center gap-2">
+              <span>Compute Fast Modular Exponentiation:</span>
+              <MathView math="a^b \pmod m" />
             </h4>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label className="text-xs text-slate-400 block mb-1">Base a</label>
+                <label className="text-xs sm:text-sm text-slate-300 block mb-1">
+                  <MathView text="Base $a$" />
+                </label>
                 <input
                   type="number"
                   value={expBase}
                   onChange={(e) => setExpBase(e.target.value)}
-                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-1.5 text-xs font-mono text-neon-pink focus:outline-none focus:border-neon-pink"
+                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-2 text-sm font-mono text-neon-pink focus:outline-none focus:border-neon-pink"
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-400 block mb-1">Exponent b</label>
+                <label className="text-xs sm:text-sm text-slate-300 block mb-1">
+                  <MathView text="Exponent $b$" />
+                </label>
                 <input
                   type="number"
                   value={expPow}
                   onChange={(e) => setExpPow(e.target.value)}
-                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-1.5 text-xs font-mono text-neon-pink focus:outline-none focus:border-neon-pink"
+                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-2 text-sm font-mono text-neon-pink focus:outline-none focus:border-neon-pink"
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-400 block mb-1">Modulus m</label>
+                <label className="text-xs sm:text-sm text-slate-300 block mb-1">
+                  <MathView text="Modulus $m$" />
+                </label>
                 <input
                   type="number"
                   value={expMod}
                   onChange={(e) => setExpMod(e.target.value)}
-                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-1.5 text-xs font-mono text-neon-pink focus:outline-none focus:border-neon-pink"
+                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-2 text-sm font-mono text-neon-pink focus:outline-none focus:border-neon-pink"
                 />
               </div>
             </div>
@@ -585,23 +611,25 @@ export default function ModularArithmeticLab({ initialData }) {
 
           <div className="p-5 rounded-3xl bg-cosmic-900/90 border border-cosmic-750 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                Binary Representation: {expPow} = ({fastExpResult.binaryExp})₂
+              <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-300">
+                <MathView text={`Binary Representation: $${expPow} = (${fastExpResult.binaryExp})_2$`} />
               </span>
-              <span className="text-sm font-mono font-bold text-neon-mint">
-                Result = {fastExpResult.result}
+              <span className="text-base font-mono font-bold text-neon-mint">
+                <MathView text={`Result $= ${fastExpResult.result}$`} />
               </span>
             </div>
             <div className="space-y-1.5 pt-2">
               {fastExpResult.steps.map((st, i) => (
                 <div
                   key={i}
-                  className="p-2.5 rounded-xl bg-cosmic-950 border border-cosmic-750 flex items-center justify-between text-xs font-mono"
+                  className="p-2.5 rounded-xl bg-cosmic-950 border border-cosmic-750 flex items-center justify-between text-xs sm:text-sm font-mono"
                 >
                   <span className="text-slate-400">
-                    Bit {st.bit} (2^{st.power}):
+                    <MathView text={`Bit $${st.bit}$ ($2^{${st.power}}$):`} />
                   </span>
-                  <span className="text-neon-cyan">{st.action}</span>
+                  <span className="text-neon-cyan">
+                    <MathView text={st.action} />
+                  </span>
                 </div>
               ))}
             </div>

@@ -95,7 +95,7 @@ export default function QuestionPanel({ topicId, onLoadLab }) {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span
-                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                      className={`px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider ${
                         q.tier === 1
                           ? 'bg-emerald-950 border border-emerald-500/40 text-emerald-300'
                           : q.tier === 2
@@ -125,7 +125,7 @@ export default function QuestionPanel({ topicId, onLoadLab }) {
                 </div>
 
                 {/* Prompt */}
-                <div className="text-sm text-slate-100 font-medium leading-relaxed">
+                <div className="text-sm sm:text-base text-slate-100 font-medium leading-relaxed">
                   <MathView text={q.prompt} />
                 </div>
 
@@ -148,10 +148,10 @@ export default function QuestionPanel({ topicId, onLoadLab }) {
                         key={optIdx}
                         disabled={isAnswered}
                         onClick={() => handleSelectOption(q.id, optIdx, q.correctIndex)}
-                        className={`p-3 rounded-lg border text-left text-xs transition flex items-center justify-between ${btnStyle}`}
+                        className={`p-3 rounded-lg border text-left text-xs sm:text-sm transition flex items-center justify-between ${btnStyle}`}
                       >
                         <div className="flex items-center gap-3">
-                          <span className="w-5 h-5 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-[10px] font-mono font-bold text-slate-400 shrink-0">
+                          <span className="w-6 h-6 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-xs font-mono font-bold text-slate-400 shrink-0">
                             {String.fromCharCode(65 + optIdx)}
                           </span>
                           <span>

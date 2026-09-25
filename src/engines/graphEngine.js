@@ -142,10 +142,10 @@ export function analyzeGraph(vertices, edges, isDirected = false) {
   if (n >= 3) {
     if (isBipartite && edges.length > 2 * n - 4) {
       planarViolated = true;
-      planarReason = `Bipartite simple graph has |E| = ${edges.length} > 2|V| - 4 = ${2 * n - 4}. By Euler's theorem, this graph cannot be planar.`;
+      planarReason = `Bipartite simple graph has $|E| = ${edges.length} > 2|V| - 4 = ${2 * n - 4}$. By Euler's theorem, this graph cannot be planar.`;
     } else if (edges.length > 3 * n - 6) {
       planarViolated = true;
-      planarReason = `|E| = ${edges.length} > 3|V| - 6 = ${3 * n - 6}. By Euler's theorem, this graph cannot be planar.`;
+      planarReason = `$|E| = ${edges.length} > 3|V| - 6 = ${3 * n - 6}$. By Euler's theorem, this graph cannot be planar.`;
     }
   }
 

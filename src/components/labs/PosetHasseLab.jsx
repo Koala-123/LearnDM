@@ -58,7 +58,7 @@ export default function PosetHasseLab({ initialData }) {
     <div className="space-y-6">
       {/* Presets Selector */}
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-xs text-slate-400 font-bold uppercase tracking-wider">Poset Presets:</span>
+        <span className="text-xs sm:text-sm text-slate-400 font-bold uppercase tracking-wider">Poset Presets:</span>
         {[
           { id: 'D12', label: 'D₁₂ (Divisors of 12)' },
           { id: 'D30', label: 'D₃₀ (Square-free: Boolean Algebra)' },
@@ -68,7 +68,7 @@ export default function PosetHasseLab({ initialData }) {
           <button
             key={p.id}
             onClick={() => setPresetType(p.id)}
-            className={`btn-arcade px-3 py-1.5 text-xs rounded-full border transition ${
+            className={`btn-arcade px-3.5 py-1.5 text-xs sm:text-sm rounded-full border transition ${
               presetType === p.id
                 ? 'bg-neon-purple text-white border-neon-purple shadow-glow-purple font-bold'
                 : 'bg-cosmic-950/80 border-cosmic-750 text-slate-400 hover:text-white'
@@ -82,21 +82,25 @@ export default function PosetHasseLab({ initialData }) {
       {/* Extremal elements & Lattice Audit */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="p-3.5 rounded-2xl bg-cosmic-900/90 border border-cosmic-750 text-center">
-          <span className="text-[10px] uppercase font-bold text-slate-400 block">Top Element (⊤)</span>
-          <span className="text-sm font-mono font-bold text-neon-purple">
+          <span className="text-xs uppercase font-bold text-slate-400 block">
+            <MathView text="Top Element ($\top$)" />
+          </span>
+          <span className="text-sm sm:text-base font-mono font-bold text-neon-purple mt-0.5 block">
             {poset.greatest ?? 'None'}
           </span>
         </div>
         <div className="p-3.5 rounded-2xl bg-cosmic-900/90 border border-cosmic-750 text-center">
-          <span className="text-[10px] uppercase font-bold text-slate-400 block">Bottom Element (⊥)</span>
-          <span className="text-sm font-mono font-bold text-neon-purple">
+          <span className="text-xs uppercase font-bold text-slate-400 block">
+            <MathView text="Bottom Element ($\bot$)" />
+          </span>
+          <span className="text-sm sm:text-base font-mono font-bold text-neon-purple mt-0.5 block">
             {poset.least ?? 'None'}
           </span>
         </div>
         <div className="p-3.5 rounded-2xl bg-cosmic-900/90 border border-cosmic-750 text-center">
-          <span className="text-[10px] uppercase font-bold text-slate-400 block">Lattice Status</span>
+          <span className="text-xs uppercase font-bold text-slate-400 block">Lattice Status</span>
           <span
-            className={`text-xs font-bold flex items-center justify-center gap-1 mt-0.5 ${
+            className={`text-xs sm:text-sm font-bold flex items-center justify-center gap-1 mt-0.5 ${
               poset.isLattice ? 'text-neon-mint' : 'text-neon-pink'
             }`}
           >
@@ -105,9 +109,9 @@ export default function PosetHasseLab({ initialData }) {
           </span>
         </div>
         <div className="p-3.5 rounded-2xl bg-cosmic-900/90 border border-cosmic-750 text-center">
-          <span className="text-[10px] uppercase font-bold text-slate-400 block">Boolean Algebra</span>
+          <span className="text-xs uppercase font-bold text-slate-400 block">Boolean Algebra</span>
           <span
-            className={`text-xs font-bold flex items-center justify-center gap-1 mt-0.5 ${
+            className={`text-xs sm:text-sm font-bold flex items-center justify-center gap-1 mt-0.5 ${
               poset.isBooleanAlgebra ? 'text-neon-mint' : 'text-neon-gold'
             }`}
           >
@@ -183,7 +187,7 @@ export default function PosetHasseLab({ initialData }) {
                     y={pt.y + 4}
                     textAnchor="middle"
                     fill={isSelected || isLub || isGlb ? '#ffffff' : '#f1f5f9'}
-                    fontSize="10"
+                    fontSize="11"
                     fontFamily="Space Mono"
                     fontWeight="bold"
                   >
@@ -204,11 +208,11 @@ export default function PosetHasseLab({ initialData }) {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-slate-400 block mb-1">Select Element 1</label>
+              <label className="text-xs sm:text-sm text-slate-300 block mb-1">Select Element 1</label>
               <select
                 value={safePair[0]}
                 onChange={(e) => setSelectedPair([e.target.value, safePair[1]])}
-                className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-2 text-xs font-mono text-neon-pink focus:outline-none focus:border-neon-pink"
+                className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-2 text-sm font-mono text-neon-pink focus:outline-none focus:border-neon-pink"
               >
                 {poset.elements.map((el) => (
                   <option key={el} value={el}>
@@ -218,11 +222,11 @@ export default function PosetHasseLab({ initialData }) {
               </select>
             </div>
             <div>
-              <label className="text-xs text-slate-400 block mb-1">Select Element 2</label>
+              <label className="text-xs sm:text-sm text-slate-300 block mb-1">Select Element 2</label>
               <select
                 value={safePair[1]}
                 onChange={(e) => setSelectedPair([safePair[0], e.target.value])}
-                className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-2 text-xs font-mono text-neon-pink focus:outline-none focus:border-neon-pink"
+                className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-2 text-sm font-mono text-neon-pink focus:outline-none focus:border-neon-pink"
               >
                 {poset.elements.map((el) => (
                   <option key={el} value={el}>
@@ -236,34 +240,38 @@ export default function PosetHasseLab({ initialData }) {
           {pairBounds && (
             <div className="space-y-3 pt-2">
               <div className="p-4 rounded-2xl bg-cosmic-950/80 border border-cosmic-750">
-                <span className="text-[10px] text-slate-400 uppercase font-bold block mb-1">
-                  Upper Bounds of &#123;{safePair[0]}, {safePair[1]}&#125;
+                <span className="text-xs text-slate-400 uppercase font-bold block mb-1">
+                  <MathView text={`Upper Bounds of $\\{${safePair[0]}, ${safePair[1]}\\}$`} />
                 </span>
-                <span className="text-xs font-mono text-slate-200">
-                  &#123;{pairBounds.upperBounds.join(', ') || '∅'}&#125;
+                <span className="text-sm font-mono text-slate-200">
+                  <MathView math={`\\{${pairBounds.upperBounds.join(', ') || '\\emptyset'}\\}`} />
                 </span>
-                <div className="mt-2 flex items-center justify-between text-xs pt-2 border-t border-cosmic-750/70">
-                  <span className="text-neon-mint font-bold">
-                    LUB (Join: <MathView math={`${safePair[0]} \\lor ${safePair[1]}`} />):
+                <div className="mt-2 flex items-center justify-between text-xs sm:text-sm pt-2 border-t border-cosmic-750/70">
+                  <span className="text-neon-mint font-bold flex items-center gap-1.5">
+                    <span>LUB (Join:</span>
+                    <MathView math={`${safePair[0]} \\lor ${safePair[1]}`} />
+                    <span>):</span>
                   </span>
-                  <span className="font-mono font-bold text-neon-mint text-sm">
+                  <span className="font-mono font-bold text-neon-mint text-base">
                     {pairBounds.lub ?? 'None'}
                   </span>
                 </div>
               </div>
 
               <div className="p-4 rounded-2xl bg-cosmic-950/80 border border-cosmic-750">
-                <span className="text-[10px] text-slate-400 uppercase font-bold block mb-1">
-                  Lower Bounds of &#123;{safePair[0]}, {safePair[1]}&#125;
+                <span className="text-xs text-slate-400 uppercase font-bold block mb-1">
+                  <MathView text={`Lower Bounds of $\\{${safePair[0]}, ${safePair[1]}\\}$`} />
                 </span>
-                <span className="text-xs font-mono text-slate-200">
-                  &#123;{pairBounds.lowerBounds.join(', ') || '∅'}&#125;
+                <span className="text-sm font-mono text-slate-200">
+                  <MathView math={`\\{${pairBounds.lowerBounds.join(', ') || '\\emptyset'}\\}`} />
                 </span>
-                <div className="mt-2 flex items-center justify-between text-xs pt-2 border-t border-cosmic-750/70">
-                  <span className="text-neon-gold font-bold">
-                    GLB (Meet: <MathView math={`${safePair[0]} \\land ${safePair[1]}`} />):
+                <div className="mt-2 flex items-center justify-between text-xs sm:text-sm pt-2 border-t border-cosmic-750/70">
+                  <span className="text-neon-gold font-bold flex items-center gap-1.5">
+                    <span>GLB (Meet:</span>
+                    <MathView math={`${safePair[0]} \\land ${safePair[1]}`} />
+                    <span>):</span>
                   </span>
-                  <span className="font-mono font-bold text-neon-gold text-sm">
+                  <span className="font-mono font-bold text-neon-gold text-base">
                     {pairBounds.glb ?? 'None'}
                   </span>
                 </div>

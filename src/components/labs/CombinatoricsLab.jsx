@@ -107,7 +107,7 @@ export default function CombinatoricsLab({ initialData }) {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`btn-arcade px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wider transition ${
+            className={`btn-arcade px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold tracking-wider transition ${
               activeTab === tab.id
                 ? 'bg-neon-gold text-cosmic-950 font-extrabold shadow-glow-gold border border-neon-gold'
                 : 'text-slate-400 hover:text-white bg-cosmic-950/60 border border-cosmic-750'
@@ -123,37 +123,37 @@ export default function CombinatoricsLab({ initialData }) {
         <div className="space-y-6">
           <div className="bg-cosmic-900/90 p-5 rounded-3xl border border-cosmic-750 space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-neon-gold flex items-center gap-2">
+              <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neon-gold flex items-center gap-2">
                 <Star className="w-4 h-4 fill-neon-gold" />
-                Stars & Bars Equation Solver: x₁ + x₂ + ... + x_k = n
+                <MathView text="Stars & Bars Equation Solver: $x_1 + x_2 + \dots + x_k = n$" />
               </h4>
               <div className="flex gap-2">
                 <button
                   onClick={() => setSbPositiveOnly(false)}
-                  className={`btn-arcade px-3 py-1 text-xs rounded-full border transition ${
+                  className={`btn-arcade px-3.5 py-1.5 text-xs sm:text-sm rounded-full border transition ${
                     !sbPositiveOnly
                       ? 'bg-neon-gold/20 text-neon-gold border-neon-gold font-bold shadow-glow-gold'
                       : 'bg-cosmic-950 text-slate-400 border-cosmic-750'
                   }`}
                 >
-                  Non-Negative (x_i ≥ 0)
+                  <MathView text="Non-Negative ($x_i \ge 0$)" />
                 </button>
                 <button
                   onClick={() => setSbPositiveOnly(true)}
-                  className={`btn-arcade px-3 py-1 text-xs rounded-full border transition ${
+                  className={`btn-arcade px-3.5 py-1.5 text-xs sm:text-sm rounded-full border transition ${
                     sbPositiveOnly
                       ? 'bg-neon-gold/20 text-neon-gold border-neon-gold font-bold shadow-glow-gold'
                       : 'bg-cosmic-950 text-slate-400 border-cosmic-750'
                   }`}
                 >
-                  Positive (x_i ≥ 1)
+                  <MathView text="Positive ($x_i \ge 1$)" />
                 </button>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs text-slate-400 block mb-1">
+                <label className="text-xs sm:text-sm text-slate-300 block mb-1">
                   Target Sum / Identical Stars ($n$)
                 </label>
                 <input
@@ -162,11 +162,11 @@ export default function CombinatoricsLab({ initialData }) {
                   max="50"
                   value={sbN}
                   onChange={(e) => setSbN(Number(e.target.value))}
-                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-2 text-sm font-mono text-neon-gold focus:outline-none focus:border-neon-gold"
+                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3.5 py-2 text-sm sm:text-base font-mono text-neon-gold focus:outline-none focus:border-neon-gold"
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-400 block mb-1">
+                <label className="text-xs sm:text-sm text-slate-300 block mb-1">
                   Number of Variables / Distinct Bins ($k$)
                 </label>
                 <input
@@ -175,7 +175,7 @@ export default function CombinatoricsLab({ initialData }) {
                   max="10"
                   value={sbK}
                   onChange={(e) => setSbK(Number(e.target.value))}
-                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-2 text-sm font-mono text-neon-gold focus:outline-none focus:border-neon-gold"
+                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3.5 py-2 text-sm sm:text-base font-mono text-neon-gold focus:outline-none focus:border-neon-gold"
                 />
               </div>
             </div>
@@ -185,7 +185,7 @@ export default function CombinatoricsLab({ initialData }) {
           <div className="p-6 rounded-3xl bg-cosmic-900/90 border border-cosmic-750 space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-[10px] uppercase font-bold text-neon-gold tracking-wider block">
+                <span className="text-xs uppercase font-bold text-neon-gold tracking-wider block">
                   Total Integer Solutions
                 </span>
                 <span className="text-2xl font-mono font-black text-white">
@@ -199,7 +199,7 @@ export default function CombinatoricsLab({ initialData }) {
 
             {/* Visual Token Representation */}
             <div className="p-4 rounded-2xl bg-cosmic-950/80 border border-cosmic-750 space-y-2">
-              <span className="text-[10px] font-mono text-slate-400 uppercase font-bold tracking-wider">
+              <span className="text-xs font-mono text-slate-300 uppercase font-bold tracking-wider">
                 Divider Representation ({Math.min(sbN, 20)} Stars ★ and {Math.min(sbK - 1, 8)} Bars |):
               </span>
               <div className="flex flex-wrap items-center gap-1.5 py-2 font-mono text-lg">
@@ -209,9 +209,9 @@ export default function CombinatoricsLab({ initialData }) {
                 {Array.from({ length: Math.max(sbK - 1, 0) }, (_, i) => (
                   <span key={`b-${i}`} className="text-neon-cyan font-bold px-1">|</span>
                 ))}
-                {sbN > 20 && <span className="text-xs text-slate-500 font-sans">...+{sbN - 20} more stars</span>}
+                {sbN > 20 && <span className="text-xs sm:text-sm text-slate-400 font-sans">...+{sbN - 20} more stars</span>}
               </div>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
                 Choose positions for the {sbK - 1} dividers among the total slots of stars + dividers.
               </p>
             </div>
@@ -223,20 +223,20 @@ export default function CombinatoricsLab({ initialData }) {
       {activeTab === 'wizard' && (
         <div className="space-y-6">
           <div className="bg-cosmic-900/90 p-5 rounded-3xl border border-cosmic-750 space-y-4">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-neon-purple flex items-center gap-2">
+            <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neon-purple flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-neon-purple" />
               Scenario Classifier & Decision Engine
             </h4>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="p-4 rounded-2xl bg-cosmic-950/80 border border-cosmic-750">
-                <span className="text-xs font-bold text-slate-200 block mb-2">
+                <span className="text-xs sm:text-sm font-bold text-slate-200 block mb-2">
                   1. Does Order of Selection Matter?
                 </span>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setOrderMatters(true)}
-                    className={`btn-arcade flex-1 py-1.5 rounded-xl text-xs font-bold transition ${
+                    className={`btn-arcade flex-1 py-2 rounded-xl text-xs sm:text-sm font-bold transition ${
                       orderMatters
                         ? 'bg-neon-purple text-white shadow-glow-purple border border-neon-purple'
                         : 'bg-cosmic-900 border border-cosmic-750 text-slate-400'
@@ -246,7 +246,7 @@ export default function CombinatoricsLab({ initialData }) {
                   </button>
                   <button
                     onClick={() => setOrderMatters(false)}
-                    className={`btn-arcade flex-1 py-1.5 rounded-xl text-xs font-bold transition ${
+                    className={`btn-arcade flex-1 py-2 rounded-xl text-xs sm:text-sm font-bold transition ${
                       !orderMatters
                         ? 'bg-neon-purple text-white shadow-glow-purple border border-neon-purple'
                         : 'bg-cosmic-900 border border-cosmic-750 text-slate-400'
@@ -258,13 +258,13 @@ export default function CombinatoricsLab({ initialData }) {
               </div>
 
               <div className="p-4 rounded-2xl bg-cosmic-950/80 border border-cosmic-750">
-                <span className="text-xs font-bold text-slate-200 block mb-2">
+                <span className="text-xs sm:text-sm font-bold text-slate-200 block mb-2">
                   2. Can Elements Repeat?
                 </span>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setRepetitionAllowed(true)}
-                    className={`btn-arcade flex-1 py-1.5 rounded-xl text-xs font-bold transition ${
+                    className={`btn-arcade flex-1 py-2 rounded-xl text-xs sm:text-sm font-bold transition ${
                       repetitionAllowed
                         ? 'bg-neon-purple text-white shadow-glow-purple border border-neon-purple'
                         : 'bg-cosmic-900 border border-cosmic-750 text-slate-400'
@@ -274,7 +274,7 @@ export default function CombinatoricsLab({ initialData }) {
                   </button>
                   <button
                     onClick={() => setRepetitionAllowed(false)}
-                    className={`btn-arcade flex-1 py-1.5 rounded-xl text-xs font-bold transition ${
+                    className={`btn-arcade flex-1 py-2 rounded-xl text-xs sm:text-sm font-bold transition ${
                       !repetitionAllowed
                         ? 'bg-neon-purple text-white shadow-glow-purple border border-neon-purple'
                         : 'bg-cosmic-900 border border-cosmic-750 text-slate-400'
@@ -286,23 +286,27 @@ export default function CombinatoricsLab({ initialData }) {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 pt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               <div>
-                <label className="text-xs text-slate-400 block mb-1">Total Items / Types (n)</label>
+                <label className="text-xs sm:text-sm text-slate-300 block mb-1">
+                  <MathView text="Total Items / Types ($n$)" />
+                </label>
                 <input
                   type="number"
                   value={nVal}
                   onChange={(e) => setNVal(e.target.value)}
-                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-2 text-xs font-mono text-neon-purple focus:outline-none focus:border-neon-purple"
+                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3.5 py-2 text-sm sm:text-base font-mono text-neon-purple focus:outline-none focus:border-neon-purple"
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-400 block mb-1">Selection Size / Slots (r)</label>
+                <label className="text-xs sm:text-sm text-slate-300 block mb-1">
+                  <MathView text="Selection Size / Slots ($r$)" />
+                </label>
                 <input
                   type="number"
                   value={rVal}
                   onChange={(e) => setRVal(e.target.value)}
-                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-2 text-xs font-mono text-neon-purple focus:outline-none focus:border-neon-purple"
+                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3.5 py-2 text-sm sm:text-base font-mono text-neon-purple focus:outline-none focus:border-neon-purple"
                 />
               </div>
             </div>
@@ -310,11 +314,13 @@ export default function CombinatoricsLab({ initialData }) {
 
           {/* Outcome Card */}
           <div className="p-5 rounded-3xl bg-cosmic-900/90 border border-cosmic-750 space-y-3">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-neon-purple block">
+            <span className="text-xs uppercase font-bold tracking-wider text-neon-purple block">
               Applicable Counting Formula
             </span>
             <div className="flex items-center justify-between">
-              <span className="text-base font-bold text-white">{wizardResult.name}</span>
+              <span className="text-base font-bold text-white">
+                <MathView text={wizardResult.name} />
+              </span>
               <span className="text-xl font-mono font-bold text-neon-mint">
                 = {wizardResult.value.toLocaleString()}
               </span>
@@ -322,7 +328,7 @@ export default function CombinatoricsLab({ initialData }) {
             <div className="text-sm font-mono text-neon-cyan py-1">
               <MathView math={wizardResult.formula} display />
             </div>
-            <p className="text-xs text-slate-400 italic">{wizardResult.useCase}</p>
+            <p className="text-xs sm:text-sm text-slate-300 italic">{wizardResult.useCase}</p>
           </div>
         </div>
       )}
@@ -331,103 +337,117 @@ export default function CombinatoricsLab({ initialData }) {
       {activeTab === 'pie' && (
         <div className="space-y-6">
           <div className="bg-cosmic-900/90 p-5 rounded-3xl border border-cosmic-750 space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-neon-cyan">
+            <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neon-cyan">
               3-Set Cardinality Inputs
             </h4>
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <label className="text-[11px] text-slate-400">|A|</label>
+                <label className="text-xs sm:text-sm text-slate-300">
+                  <MathView math="|A|" />
+                </label>
                 <input
                   type="number"
                   value={pieInputs.setA}
                   onChange={(e) => setPieInputs({ ...pieInputs, setA: Number(e.target.value) })}
-                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-2.5 py-1 text-xs font-mono text-neon-cyan"
+                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-1.5 text-sm font-mono text-neon-cyan"
                 />
               </div>
               <div>
-                <label className="text-[11px] text-slate-400">|B|</label>
+                <label className="text-xs sm:text-sm text-slate-300">
+                  <MathView math="|B|" />
+                </label>
                 <input
                   type="number"
                   value={pieInputs.setB}
                   onChange={(e) => setPieInputs({ ...pieInputs, setB: Number(e.target.value) })}
-                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-2.5 py-1 text-xs font-mono text-neon-cyan"
+                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-1.5 text-sm font-mono text-neon-cyan"
                 />
               </div>
               <div>
-                <label className="text-[11px] text-slate-400">|C|</label>
+                <label className="text-xs sm:text-sm text-slate-300">
+                  <MathView math="|C|" />
+                </label>
                 <input
                   type="number"
                   value={pieInputs.setC}
                   onChange={(e) => setPieInputs({ ...pieInputs, setC: Number(e.target.value) })}
-                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-2.5 py-1 text-xs font-mono text-neon-cyan"
+                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-1.5 text-sm font-mono text-neon-cyan"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-4 gap-2 pt-1">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2">
               <div>
-                <label className="text-[10px] text-slate-400">|A ∩ B|</label>
+                <label className="text-xs font-semibold text-slate-300">
+                  <MathView math="|A \cap B|" />
+                </label>
                 <input
                   type="number"
                   value={pieInputs.ab}
                   onChange={(e) => setPieInputs({ ...pieInputs, ab: Number(e.target.value) })}
-                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-2 py-1 text-xs font-mono text-neon-cyan"
+                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-2.5 py-1.5 text-sm font-mono text-neon-cyan"
                 />
               </div>
               <div>
-                <label className="text-[10px] text-slate-400">|A ∩ C|</label>
+                <label className="text-xs font-semibold text-slate-300">
+                  <MathView math="|A \cap C|" />
+                </label>
                 <input
                   type="number"
                   value={pieInputs.ac}
                   onChange={(e) => setPieInputs({ ...pieInputs, ac: Number(e.target.value) })}
-                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-2 py-1 text-xs font-mono text-neon-cyan"
+                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-2.5 py-1.5 text-sm font-mono text-neon-cyan"
                 />
               </div>
               <div>
-                <label className="text-[10px] text-slate-400">|B ∩ C|</label>
+                <label className="text-xs font-semibold text-slate-300">
+                  <MathView math="|B \cap C|" />
+                </label>
                 <input
                   type="number"
                   value={pieInputs.bc}
                   onChange={(e) => setPieInputs({ ...pieInputs, bc: Number(e.target.value) })}
-                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-2 py-1 text-xs font-mono text-neon-cyan"
+                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-2.5 py-1.5 text-sm font-mono text-neon-cyan"
                 />
               </div>
               <div>
-                <label className="text-[10px] text-slate-400">|A ∩ B ∩ C|</label>
+                <label className="text-xs font-semibold text-slate-300">
+                  <MathView math="|A \cap B \cap C|" />
+                </label>
                 <input
                   type="number"
                   value={pieInputs.abc}
                   onChange={(e) => setPieInputs({ ...pieInputs, abc: Number(e.target.value) })}
-                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-2 py-1 text-xs font-mono text-neon-cyan"
+                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-2.5 py-1.5 text-sm font-mono text-neon-cyan"
                 />
               </div>
             </div>
           </div>
 
           <div className="p-5 rounded-3xl bg-cosmic-900/90 border border-cosmic-750 space-y-3">
-            <span className="text-xs uppercase font-bold tracking-wider text-neon-mint">
+            <span className="text-xs sm:text-sm uppercase font-bold tracking-wider text-neon-mint">
               PIE Union Calculation
             </span>
-            <div className="text-sm font-mono text-neon-mint py-1">
+            <div className="text-base font-mono text-neon-mint py-1">
               <MathView math={pieResult.formula} display />
             </div>
 
             <div className="pt-2 border-t border-cosmic-750">
-              <h5 className="text-[11px] uppercase font-bold text-neon-cyan mb-2">
+              <h5 className="text-xs sm:text-sm uppercase font-bold text-neon-cyan mb-2">
                 Disjoint Venn Diagram Regions
               </h5>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs sm:text-sm font-mono">
                 <span className="p-2.5 rounded-xl bg-cosmic-950 border border-cosmic-750">
-                  Only A: {pieResult.vennRegions.onlyA}
+                  <MathView text={`Only $A$: ${pieResult.vennRegions.onlyA}`} />
                 </span>
                 <span className="p-2.5 rounded-xl bg-cosmic-950 border border-cosmic-750">
-                  Only B: {pieResult.vennRegions.onlyB}
+                  <MathView text={`Only $B$: ${pieResult.vennRegions.onlyB}`} />
                 </span>
                 <span className="p-2.5 rounded-xl bg-cosmic-950 border border-cosmic-750">
-                  Only C: {pieResult.vennRegions.onlyC}
+                  <MathView text={`Only $C$: ${pieResult.vennRegions.onlyC}`} />
                 </span>
                 <span className="p-2.5 rounded-xl bg-cosmic-950 border border-neon-purple/40 text-neon-purple font-bold">
-                  Center ABC: {pieResult.vennRegions.onlyABC}
+                  <MathView text={`Center $A \\cap B \\cap C$: ${pieResult.vennRegions.onlyABC}`} />
                 </span>
               </div>
             </div>
@@ -439,36 +459,40 @@ export default function CombinatoricsLab({ initialData }) {
       {activeTab === 'pigeonhole' && (
         <div className="space-y-6">
           <div className="bg-cosmic-900/90 p-5 rounded-3xl border border-cosmic-750">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-neon-mint mb-3">
+            <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neon-mint mb-3">
               Configure Pigeonhole Distribution
             </h4>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs text-slate-400 block mb-1">Number of Pigeons / Items (N)</label>
+                <label className="text-xs sm:text-sm text-slate-300 block mb-1">
+                  <MathView text="Number of Pigeons / Items ($N$)" />
+                </label>
                 <input
                   type="number"
                   value={phItems}
                   onChange={(e) => setPhItems(e.target.value)}
-                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-2 text-xs font-mono text-neon-mint focus:outline-none focus:border-neon-mint"
+                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3.5 py-2 text-sm sm:text-base font-mono text-neon-mint focus:outline-none focus:border-neon-mint"
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-400 block mb-1">Number of Holes / Bins (k)</label>
+                <label className="text-xs sm:text-sm text-slate-300 block mb-1">
+                  <MathView text="Number of Holes / Bins ($k$)" />
+                </label>
                 <input
                   type="number"
                   value={phBins}
                   onChange={(e) => setPhBins(e.target.value)}
-                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-2 text-xs font-mono text-neon-mint focus:outline-none focus:border-neon-mint"
+                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3.5 py-2 text-sm sm:text-base font-mono text-neon-mint focus:outline-none focus:border-neon-mint"
                 />
               </div>
             </div>
           </div>
 
           <div className="p-5 rounded-3xl bg-cosmic-900/90 border border-cosmic-750 space-y-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-neon-mint">
+            <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neon-mint">
               Pigeonhole Guarantee
             </span>
-            <div className="text-sm text-slate-200">
+            <div className="text-sm sm:text-base text-slate-200 leading-relaxed">
               <MathView text={phResult.guarantee} />
             </div>
           </div>

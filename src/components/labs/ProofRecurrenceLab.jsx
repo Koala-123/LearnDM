@@ -79,7 +79,7 @@ export default function ProofRecurrenceLab({ initialData }) {
       <div className="flex gap-2 border-b border-cosmic-750 pb-2">
         <button
           onClick={() => setActiveSubTab('recurrence')}
-          className={`btn-arcade px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition ${
+          className={`btn-arcade px-4 py-2 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider transition ${
             activeSubTab === 'recurrence'
               ? 'bg-neon-gold text-cosmic-950 shadow-glow-gold border border-neon-gold'
               : 'text-slate-400 hover:text-white bg-cosmic-950/60 border border-cosmic-750'
@@ -89,7 +89,7 @@ export default function ProofRecurrenceLab({ initialData }) {
         </button>
         <button
           onClick={() => setActiveSubTab('induction')}
-          className={`btn-arcade px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition ${
+          className={`btn-arcade px-4 py-2 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider transition ${
             activeSubTab === 'induction'
               ? 'bg-neon-gold text-cosmic-950 shadow-glow-gold border border-neon-gold'
               : 'text-slate-400 hover:text-white bg-cosmic-950/60 border border-cosmic-750'
@@ -108,39 +108,47 @@ export default function ProofRecurrenceLab({ initialData }) {
             </h4>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div>
-                <label className="text-xs text-slate-400 block mb-1">Coeff $c_1$</label>
+                <label className="text-xs sm:text-sm text-slate-300 block mb-1">
+                  <MathView text="Coeff $c_1$" />
+                </label>
                 <input
                   type="number"
                   value={c1}
                   onChange={(e) => setC1(Number(e.target.value))}
-                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-1.5 text-sm font-mono text-neon-gold focus:outline-none focus:border-neon-gold"
+                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3.5 py-2 text-sm sm:text-base font-mono text-neon-gold focus:outline-none focus:border-neon-gold"
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-400 block mb-1">Coeff $c_2$</label>
+                <label className="text-xs sm:text-sm text-slate-300 block mb-1">
+                  <MathView text="Coeff $c_2$" />
+                </label>
                 <input
                   type="number"
                   value={c2}
                   onChange={(e) => setC2(Number(e.target.value))}
-                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-1.5 text-sm font-mono text-neon-gold focus:outline-none focus:border-neon-gold"
+                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3.5 py-2 text-sm sm:text-base font-mono text-neon-gold focus:outline-none focus:border-neon-gold"
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-400 block mb-1">Initial $a_0$</label>
+                <label className="text-xs sm:text-sm text-slate-300 block mb-1">
+                  <MathView text="Initial $a_0$" />
+                </label>
                 <input
                   type="number"
                   value={a0}
                   onChange={(e) => setA0(Number(e.target.value))}
-                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-1.5 text-sm font-mono text-neon-gold focus:outline-none focus:border-neon-gold"
+                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3.5 py-2 text-sm sm:text-base font-mono text-neon-gold focus:outline-none focus:border-neon-gold"
                 />
               </div>
               <div>
-                <label className="text-xs text-slate-400 block mb-1">Initial $a_1$</label>
+                <label className="text-xs sm:text-sm text-slate-300 block mb-1">
+                  <MathView text="Initial $a_1$" />
+                </label>
                 <input
                   type="number"
                   value={a1}
                   onChange={(e) => setA1(Number(e.target.value))}
-                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3 py-1.5 text-sm font-mono text-neon-gold focus:outline-none focus:border-neon-gold"
+                  className="w-full bg-cosmic-950 border border-cosmic-750 rounded-xl px-3.5 py-2 text-sm sm:text-base font-mono text-neon-gold focus:outline-none focus:border-neon-gold"
                 />
               </div>
             </div>
@@ -149,27 +157,27 @@ export default function ProofRecurrenceLab({ initialData }) {
           {/* Solution & Sequence display */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-cosmic-900/90 p-5 rounded-3xl border border-cosmic-750 space-y-3">
-              <h5 className="text-xs font-bold uppercase tracking-wider text-neon-gold">
+              <h5 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neon-gold">
                 Characteristic Equation & Roots
               </h5>
               <div className="text-sm font-mono text-slate-200">
                 <MathView math={`r^2 - (${c1})r - (${c2}) = 0`} display />
-                <div className="mt-2 text-xs text-neon-gold">
+                <div className="mt-2 text-xs sm:text-sm text-neon-gold">
                   <MathView math={recurrenceData.charRoots} />
                 </div>
               </div>
               <div className="pt-2 border-t border-cosmic-750">
-                <h5 className="text-xs font-bold uppercase tracking-wider text-neon-purple mb-1">
+                <h5 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neon-purple mb-1">
                   Closed Form Solution
                 </h5>
-                <div className="text-xs font-mono text-neon-purple overflow-x-auto py-1">
+                <div className="text-xs sm:text-sm font-mono text-neon-purple overflow-x-auto py-1">
                   <MathView math={recurrenceData.closedForm} />
                 </div>
               </div>
             </div>
 
             <div className="bg-cosmic-900/90 p-5 rounded-3xl border border-cosmic-750">
-              <h5 className="text-xs font-bold uppercase tracking-wider text-neon-mint mb-3">
+              <h5 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neon-mint mb-3">
                 First 11 Computed Terms
               </h5>
               <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
@@ -178,8 +186,10 @@ export default function ProofRecurrenceLab({ initialData }) {
                     key={idx}
                     className="p-2.5 rounded-2xl bg-cosmic-950 border border-cosmic-750 text-center"
                   >
-                    <span className="text-[10px] text-slate-500 font-mono block">a_{idx}</span>
-                    <span className="text-xs font-mono font-bold text-neon-mint">{val}</span>
+                    <span className="text-xs text-slate-400 font-mono block">
+                      <MathView math={`a_{${idx}}`} />
+                    </span>
+                    <span className="text-xs sm:text-sm font-mono font-bold text-neon-mint">{val}</span>
                   </div>
                 ))}
               </div>
@@ -195,7 +205,7 @@ export default function ProofRecurrenceLab({ initialData }) {
               <button
                 key={key}
                 onClick={() => setSelectedInduction(key)}
-                className={`btn-arcade px-3.5 py-1.5 rounded-full text-xs font-bold transition ${
+                className={`btn-arcade px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-bold transition ${
                   selectedInduction === key
                     ? 'bg-neon-gold text-cosmic-950 shadow-glow-gold border border-neon-gold'
                     : 'bg-cosmic-950/80 text-slate-400 border border-cosmic-750 hover:text-white'
@@ -208,37 +218,40 @@ export default function ProofRecurrenceLab({ initialData }) {
 
           <div className="bg-cosmic-900/90 p-6 rounded-3xl border border-cosmic-750 space-y-4">
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-neon-gold">
+              <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neon-gold">
                 Theorem to Prove
               </span>
-              <div className="mt-1 text-base font-bold text-white">
+              <div className="mt-1 text-base sm:text-lg font-bold text-white">
                 <MathView math={currInduction.theorem} display />
               </div>
             </div>
 
             <div className="p-4 rounded-2xl bg-cosmic-950/80 border border-cosmic-750 space-y-1">
-              <div className="flex items-center gap-2 text-xs font-bold text-neon-mint mb-1">
-                <CheckCircle2 className="w-4 h-4" /> Step 1: Base Case
+              <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-neon-mint mb-1">
+                <CheckCircle2 className="w-4 h-4" />
+                <MathView text="Step 1: Base Case ($P(n_0)$)" />
               </div>
-              <div className="text-xs text-slate-300 leading-relaxed">
+              <div className="text-xs sm:text-sm text-slate-200 leading-relaxed">
                 <MathView text={currInduction.baseCase} />
               </div>
             </div>
 
             <div className="p-4 rounded-2xl bg-cosmic-950/80 border border-cosmic-750 space-y-1">
-              <div className="flex items-center gap-2 text-xs font-bold text-neon-cyan mb-1">
-                <CheckCircle2 className="w-4 h-4" /> Step 2: Inductive Hypothesis
+              <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-neon-cyan mb-1">
+                <CheckCircle2 className="w-4 h-4" />
+                <MathView text="Step 2: Inductive Hypothesis ($P(k)$)" />
               </div>
-              <div className="text-xs text-slate-300 leading-relaxed">
+              <div className="text-xs sm:text-sm text-slate-200 leading-relaxed">
                 <MathView text={currInduction.hyp} />
               </div>
             </div>
 
             <div className="p-4 rounded-2xl bg-cosmic-950/80 border border-cosmic-750 space-y-1">
-              <div className="flex items-center gap-2 text-xs font-bold text-neon-gold mb-1">
-                <CheckCircle2 className="w-4 h-4" /> Step 3: Inductive Step (Deduce P(k+1))
+              <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-neon-gold mb-1">
+                <CheckCircle2 className="w-4 h-4" />
+                <MathView text="Step 3: Inductive Step (Deduce $P(k+1)$)" />
               </div>
-              <div className="text-xs text-slate-300 leading-relaxed">
+              <div className="text-xs sm:text-sm text-slate-200 leading-relaxed">
                 <MathView text={currInduction.step} />
               </div>
             </div>

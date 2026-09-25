@@ -115,6 +115,6 @@ export function pigeonholePrinciple(items, bins) {
   const floorVal = Math.floor(items / bins);
   return {
     minMaxInABin: ceilVal,
-    guarantee: `By the Generalized Pigeonhole Principle, putting ${items} items into ${bins} bins guarantees at least one bin has \\ge \\lceil ${items} / ${bins} \\rceil = ${ceilVal} items.`,
+    guarantee: `By the Generalized Pigeonhole Principle, putting ${items} items into ${bins} bins guarantees at least one bin has $\\ge \\lceil ${items} / ${bins} \\rceil = ${ceilVal}$ items.`,
   };
 }

@@ -68,5 +68,53 @@ const k5 = getGraphPreset('K5');
 const k5Analysis = analyzeGraph(k5.vertices, k5.edges, false);
 assert(k5Analysis.planarViolated, 'K5 violates planar simple edge bound E <= 3V - 6 (10 > 9)');
 
-console.log(`\nResults: ${passed} passed, ${failed} failed`);
-if (failed > 0) process.exit(1);
+console.log('\n--- Testing Question Data Integrity (MCQ, MSQ, NAT) ---');
+import('./src/data/questionsData.js').then(({ QUESTIONS_DATA }) => {
+  assert(QUESTIONS_DATA.length >= 170, `Loaded ${QUESTIONS_DATA.length} comprehensive questions (>= 170)`);
+
+  let invalidSchemaCount = 0;
+  let mcqCount = 0;
+  let msqCount = 0;
+  let natCount = 0;
+
+  QUESTIONS_DATA.forEach((q, idx) => {
+    const qType = q.type || 'mcq';
+    if (!q.id || !q.unitId || !q.title || !q.prompt || !q.explanation || !q.tier) {
+      console.error(`Invalid question schema at index ${idx}:`, q);
+      invalidSchemaCount++;
+      return;
+    }
+
+    if (qType === 'mcq') {
+      mcqCount++;
+      if (!Array.isArray(q.options) || typeof q.correctIndex !== 'number' || q.correctIndex < 0 || q.correctIndex >= q.options.length) {
+        console.error(`Invalid MCQ at id ${q.id}: options or correctIndex invalid`, q);
+        invalidSchemaCount++;
+      }
+    } else if (qType === 'msq') {
+      msqCount++;
+      if (!Array.isArray(q.options) || !Array.isArray(q.correctIndices) || q.correctIndices.length === 0 || !q.correctIndices.every(i => i >= 0 && i < q.options.length)) {
+        console.error(`Invalid MSQ at id ${q.id}: options or correctIndices invalid`, q);
+        invalidSchemaCount++;
+      }
+    } else if (qType === 'nat') {
+      natCount++;
+      if (q.correctAnswer === undefined || q.correctAnswer === null || String(q.correctAnswer).trim() === '') {
+        console.error(`Invalid NAT at id ${q.id}: correctAnswer missing`, q);
+        invalidSchemaCount++;
+      }
+    } else {
+      console.error(`Unknown question type ${qType} at id ${q.id}`);
+      invalidSchemaCount++;
+    }
+  });
+
+  assert(invalidSchemaCount === 0, `All questions passed schema verification (0 invalid)`);
+  assert(mcqCount > 0, `MCQs present: ${mcqCount}`);
+  assert(msqCount >= 24, `MSQs present: ${msqCount} (>= 24)`);
+  assert(natCount >= 24, `NAT questions present: ${natCount} (>= 24)`);
+
+  console.log(`\nResults: ${passed} passed, ${failed} failed`);
+  if (failed > 0) process.exit(1);
+});
+

@@ -132,27 +132,23 @@ export default function App() {
             {[
               {
                 id: 'story',
-                label: '1. Story & Intuition',
+                label: 'Story and Intuition',
                 icon: BookOpen,
-                badge: null,
               },
               {
                 id: 'lab',
-                label: '2. Interactive Lab',
+                label: 'Interactive Lab',
                 icon: FlaskConical,
-                badge: 'Live',
               },
               {
                 id: 'practice',
-                label: '3. Practice Arena',
+                label: 'Practice Arena',
                 icon: Target,
-                badge: `${QUESTIONS_DATA.filter((q) => q.unitId === activeTopic.id).length} Challenges`,
               },
               {
                 id: 'cheatsheet',
-                label: '4. Cheat Sheet',
+                label: 'Cheat Sheet',
                 icon: FileText,
-                badge: 'Traps',
               },
             ].map((screen) => {
               const Icon = screen.icon;
@@ -167,7 +163,7 @@ export default function App() {
                   aria-controls={`panel-${screen.id}`}
                   tabIndex={isActive ? 0 : -1}
                   onClick={() => setActiveScreen(screen.id)}
-                  className={`btn-arcade py-3 px-3 rounded-xl text-xs sm:text-sm font-bold transition flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-2 text-center focus-visible:ring-2 focus-visible:ring-neon-cyan focus:outline-none ${
+                  className={`btn-arcade py-3 px-3 rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 text-center focus-visible:ring-2 focus-visible:ring-neon-cyan focus:outline-none ${
                     isActive
                       ? 'bg-neon-purple text-white shadow-glow-purple border border-neon-purple'
                       : 'text-slate-300 hover:text-white hover:bg-cosmic-800/60 bg-cosmic-950/60 border border-cosmic-750/70'
@@ -175,17 +171,6 @@ export default function App() {
                 >
                   <Icon className="w-4 h-4 shrink-0" aria-hidden="true" />
                   <span className="truncate">{screen.label}</span>
-                  {screen.badge && (
-                    <span
-                      className={`px-2 py-0.5 rounded-full text-xs font-mono font-bold shrink-0 ${
-                        isActive
-                          ? 'bg-cosmic-950/70 text-neon-gold border border-neon-gold/40'
-                          : 'bg-cosmic-900 text-slate-400 border border-cosmic-750'
-                      }`}
-                    >
-                      {screen.badge}
-                    </span>
-                  )}
                 </button>
               );
             })}

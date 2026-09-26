@@ -33,7 +33,7 @@ export default function ConceptPanel({ topic }) {
               className="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1.5"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs sm:text-sm font-bold text-slate-200">{thm.name}</span>
+                <MathView text={thm.name} className="text-xs sm:text-sm font-bold text-slate-200" />
                 <span className="text-xs font-mono text-slate-400">{thm.category || 'Core Theorem'}</span>
               </div>
               <div className="text-xs sm:text-sm text-slate-300 leading-relaxed">

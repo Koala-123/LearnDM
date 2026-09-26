@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import MathView from './components/MathView';
 import { TOPICS } from './data/topics';
+import { QUESTIONS_DATA } from './data/questionsData';
 
 // Dedicated Full-Width Screens
 import StoryIntuitionScreen from './components/screens/StoryIntuitionScreen';
@@ -23,15 +24,10 @@ export default function App() {
   const [activeScreen, setActiveScreen] = useState('lab'); // 'story' | 'lab' | 'practice' | 'cheatsheet'
   const [examFilter, setExamFilter] = useState('all');
   const [labPayload, setLabPayload] = useState(null);
-  const [xp, setXp] = useState(1420);
   const [loadedBanner, setLoadedBanner] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const activeTopic = TOPICS.find((t) => t.id === activeTopicId) || TOPICS[0];
-
-  const handleAddXp = (amount = 50) => {
-    setXp((prev) => prev + amount);
-  };
 
   // Callback when user clicks "Load into Lab" from any challenge card
   const handleLoadLab = (payload) => {
@@ -43,6 +39,14 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex bg-cosmic-950 text-slate-100 cosmic-grid">
+      {/* Skip to Main Content Link for Keyboard & Screen Reader Users (WCAG 2.4.1) */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2.5 focus:bg-neon-purple focus:text-white focus:font-bold focus:rounded-xl focus:shadow-glow-purple focus:outline-none focus:ring-2 focus:ring-neon-cyan"
+      >
+        Skip to main content
+      </a>
+
       {/* 1. Left Sidebar Navigation (Desktop permanent + Mobile/Tablet slide-over drawer) */}
       <Sidebar
         activeTopicId={activeTopicId}
@@ -54,7 +58,6 @@ export default function App() {
         onChangeExamFilter={setExamFilter}
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
-        xp={xp}
       />
 
       {/* 2. Main Content Studio Area */}
@@ -63,11 +66,16 @@ export default function App() {
         <Navbar
           activeTopic={activeTopic}
           onOpenSidebar={() => setSidebarOpen(true)}
-          xp={xp}
         />
 
         {/* Main Work Area */}
-        <main className="flex-1 max-w-6xl w-full mx-auto p-3.5 sm:p-5 lg:p-7 space-y-6">
+        <main
+          id="main-content"
+          role="main"
+          tabIndex="-1"
+          aria-label={`Learning module: ${activeTopic.title}`}
+          className="flex-1 max-w-6xl w-full mx-auto p-3.5 sm:p-5 lg:p-7 space-y-6 focus:outline-none"
+        >
           {/* Active Topic Banner */}
           <div className="p-5 sm:p-7 rounded-3xl bg-gradient-to-r from-cosmic-900 via-cosmic-850 to-cosmic-900 border border-cosmic-750 flex flex-wrap items-center justify-between gap-4 shadow-xl shadow-black/40">
             <div className="space-y-1.5 max-w-2xl">
@@ -114,9 +122,13 @@ export default function App() {
           )}
 
           {/* ========================================================================= */}
-          {/* TOPIC SUB-NAVIGATION HUD TABS (The 4 Screens per Topic)                  */}
+          {/* TOPIC SUB-NAVIGATION HUD TABS (The 4 Screens per Topic - WCAG Tabs Pattern) */}
           {/* ========================================================================= */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 p-2 bg-cosmic-900/90 rounded-2xl border border-cosmic-750 shadow-lg">
+          <div
+            role="tablist"
+            aria-label="Course module view modes"
+            className="grid grid-cols-2 md:grid-cols-4 gap-2.5 p-2 bg-cosmic-900/90 rounded-2xl border border-cosmic-750 shadow-lg"
+          >
             {[
               {
                 id: 'story',
@@ -134,7 +146,7 @@ export default function App() {
                 id: 'practice',
                 label: '3. Practice Arena',
                 icon: Target,
-                badge: '15 Challenges',
+                badge: `${QUESTIONS_DATA.filter((q) => q.unitId === activeTopic.id).length} Challenges`,
               },
               {
                 id: 'cheatsheet',
@@ -149,14 +161,19 @@ export default function App() {
               return (
                 <button
                   key={screen.id}
+                  id={`tab-${screen.id}`}
+                  role="tab"
+                  aria-selected={isActive}
+                  aria-controls={`panel-${screen.id}`}
+                  tabIndex={isActive ? 0 : -1}
                   onClick={() => setActiveScreen(screen.id)}
-                  className={`btn-arcade py-3 px-3 rounded-xl text-xs sm:text-sm font-bold transition flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-2 text-center ${
+                  className={`btn-arcade py-3 px-3 rounded-xl text-xs sm:text-sm font-bold transition flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-2 text-center focus-visible:ring-2 focus-visible:ring-neon-cyan focus:outline-none ${
                     isActive
                       ? 'bg-neon-purple text-white shadow-glow-purple border border-neon-purple'
                       : 'text-slate-300 hover:text-white hover:bg-cosmic-800/60 bg-cosmic-950/60 border border-cosmic-750/70'
                   }`}
                 >
-                  <Icon className="w-4 h-4 shrink-0" />
+                  <Icon className="w-4 h-4 shrink-0" aria-hidden="true" />
                   <span className="truncate">{screen.label}</span>
                   {screen.badge && (
                     <span
@@ -175,9 +192,15 @@ export default function App() {
           </div>
 
           {/* ========================================================================= */}
-          {/* ACTIVE SCREEN CONTENT DISPLAY                                             */}
+          {/* ACTIVE SCREEN CONTENT DISPLAY (WCAG Tabpanel)                             */}
           {/* ========================================================================= */}
-          <div className="pt-2">
+          <div
+            id={`panel-${activeScreen}`}
+            role="tabpanel"
+            aria-labelledby={`tab-${activeScreen}`}
+            tabIndex="0"
+            className="pt-2 focus:outline-none"
+          >
             {activeScreen === 'story' && (
               <StoryIntuitionScreen
                 topic={activeTopic}
@@ -190,7 +213,6 @@ export default function App() {
                 topic={activeTopic}
                 labPayload={labPayload}
                 onLoadLabPayload={handleLoadLab}
-                onAddXp={handleAddXp}
               />
             )}
 
@@ -198,7 +220,6 @@ export default function App() {
               <PracticeArenaScreen
                 topicId={activeTopic.id}
                 onLoadLab={handleLoadLab}
-                onAddXp={handleAddXp}
               />
             )}
 
@@ -209,13 +230,13 @@ export default function App() {
         </main>
 
         {/* Studio Footer */}
-        <footer className="mt-auto border-t border-cosmic-750/80 bg-cosmic-950 py-5 text-center text-xs text-slate-500">
+        <footer role="contentinfo" className="mt-auto border-t border-cosmic-750/80 bg-cosmic-950 py-5 text-center text-xs text-slate-500">
           <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
             <div>
               LearnDM • Interactive Discrete Mathematics Studio • Theory, Visual Simulations &amp; Problem Solving
             </div>
             <div className="text-xs text-slate-400 font-mono">
-              SYS::COSMIC_ARCADE v2.0 • 120 Questions • 8 Labs
+              SYS::COSMIC_ARCADE v2.0 • {QUESTIONS_DATA.length} Questions • 8 Labs
             </div>
           </div>
         </footer>

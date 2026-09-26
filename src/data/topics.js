@@ -4,20 +4,20 @@ export const TOPICS = [
     week: 'Weeks 1–2',
     unitNumber: 1,
     title: 'Sets, Relations & Functions',
-    subtitle: 'Equivalence Relations, Closures & Partitions',
+    subtitle: 'Transitive Counting, Equivalence Classes & Functions',
     examCategory: 'test1',
-    badge: 'Core Foundation',
+    badge: 'Core',
     icon: 'Network',
     accentColor: 'neon-purple',
     labId: 'relations',
     keyFormulas: [
-      '|\\mathcal{P}(A)| = 2^{|A|}',
+      '|B|^{|A|} = n^m \\text{ (Total Functions)}, \\quad P(n, m) \\text{ (Injections)}',
       'R \\text{ is Equivalence} \\iff \\text{Reflexive} \\land \\text{Symmetric} \\land \\text{Transitive}',
-      'A / R = \\{ [a] \\mid a \\in A \\} \\text{ is a partition of } A',
-      '\\text{Reflexive: } 2^{n(n-1)}, \\quad \\text{Symmetric: } 2^{n(n+1)/2}',
+      'A / R = \\{ [a] \\mid a \\in A \\} \\implies B_n = \\sum_{k=1}^n S(n, k) \\text{ (Bell Number)}',
+      '\\text{Transitive: } T(1)=2, T(2)=13, T(3)=171, T(4)=3994',
     ],
     labGuide: {
-      mission: 'Master binary relations, graph closures (Warshall algorithm), and quotient set partitions $A/R$.',
+      mission: 'Master binary relations, transitive counting, graph closures (Warshall algorithm), and quotient set partitions $A/R$.',
       invariant: 'Partition Invariant: $\\bigcup [a] = A \\quad \\text{and} \\quad [a] \\cap [b] = \\emptyset \\text{ if } [a] \\ne [b]$',
       step1: {
         title: 'Define Domain Set & Pairs',
@@ -33,36 +33,56 @@ export const TOPICS = [
       },
     },
     quickQuest: {
-      question: 'Let $A = \\{1, 2, 3, 4\\}$. How many relations on $A$ are both symmetric and antisymmetric?',
-      options: ['$1$ (empty relation)', '$16$ ($2^4$)', '$64$ ($2^6$)', '$256$ ($2^8$)'],
+      question: 'Let $A = \\{1, 2\\}$. How many binary relations on $A$ are TRANSITIVE?',
+      options: ['$10$', '$13$', '$14$', '$16$'],
       correctIndex: 1,
-      explanation: 'If $R$ is both symmetric and antisymmetric, it cannot contain any off-diagonal pairs $(a,b)$ with $a \\ne b$. The only allowed pairs are diagonal pairs $(a,a)$. With 4 elements, there are $2^4 = 16$ such relations.',
+      explanation: 'Total relations on $A = \\{1, 2\\}$ is $2^{2^2} = 2^4 = 16$. Transitivity only fails if $(1, 2) \\in R$ and $(2, 1) \\in R$ while missing $(1, 1)$ or $(2, 2)$. Exactly 3 relations contain both $(1, 2)$ and $(2, 1)$ without both diagonal loops: $\\{(1, 2), (2, 1)\\}$, $\\{(1, 1), (1, 2), (2, 1)\\}$, and $\\{(2, 2), (1, 2), (2, 1)\\}$. Thus, $16 - 3 = 13$ relations are transitive.',
       loadPayload: {
         type: 'relation',
-        elements: ['1', '2', '3', '4'],
-        pairs: [['1', '1'], ['2', '2'], ['3', '3']],
+        elements: ['1', '2'],
+        pairs: [['1', '2'], ['2', '1']],
       },
     },
     story: {
-      hook: 'How do relational databases (SQL JOINs), permission systems, and Git branch histories actually work under the hood?',
-      csApp: 'Relational Database Management Systems (RDBMS) are built directly on Codd’s relational algebra. Equivalence relations define clustering, database equivalence, and type equality in compilers.',
-      keyIntuition: 'A binary relation is simply a set of directed arrows connecting elements. Closures answer: "What is the minimal set of arrows needed to guarantee self-loops (reflexive), bidirectional paths (symmetric), or shortcut paths (transitive)?"',
+      hook: 'How do social networks, permissions, and database lookups actually connect items under the hood?',
+      csApp: 'Relational Database Management Systems (RDBMS) use Structured Query Language (SQL) table relationships (like JOIN operations). In Computer Science (CS), equivalence relations group matching items together—like clustering search results or checking whether two data types in a programming language compiler are identical.',
+      keyIntuition: 'A relation is simply a set of directed arrows connecting elements. Closures answer a simple question: "What is the absolute minimum number of new arrows we must add to guarantee that everyone has a self-loop (reflexive), every street is two-way (symmetric), or shortcuts always exist (transitive)?"',
     },
     cheatSheet: {
       formulas: [
-        { name: 'Power Set Size', latex: '|\\mathcal{P}(A)| = 2^{|A|}', notes: 'Number of subsets of set $A$' },
-        { name: 'Total Binary Relations', latex: '2^{n^2}', notes: 'Subsets of $A \\times A$ for $|A| = n$' },
-        { name: 'Reflexive Relations', latex: '2^{n(n-1)}', notes: 'All $n$ diagonal pairs must be present' },
-        { name: 'Symmetric Relations', latex: '2^{n(n+1)/2}', notes: 'Independent choices for diagonal & upper triangle' },
-        { name: 'Antisymmetric Relations', latex: '2^n \\cdot 3^{n(n-1)/2}', notes: 'Diagonal has 2 choices; off-diagonal pair $(a,b)/(b,a)$ has 3 choices' },
+        { name: 'Total Functions', latex: '|B|^{|A|} = n^m', notes: 'Each of $m$ inputs in $A$ has $n$ independent choices in $B$' },
+        { name: 'Partial Functions', latex: '(|B| + 1)^{|A|} = (n + 1)^m', notes: 'Each input picks one of $n$ targets or remains undefined' },
+        { name: 'Injective Functions (1-to-1)', latex: 'P(n, m) = \\frac{n!}{(n-m)!}', notes: 'Distinct inputs map to distinct outputs; requires $m \\le n$' },
+        { name: 'Surjective Functions (Onto)', latex: 'n! \\cdot S(m, n)', notes: 'Every element in $B$ is reached; requires $m \\ge n$' },
+        { name: 'Bijective Functions', latex: 'n!', notes: 'Both 1-to-1 and onto; requires $m = n$; invertible' },
+        { name: 'Transitive Relations Count', latex: 'T(1)=2, T(2)=13, T(3)=171, T(4)=3994', notes: 'No closed-form formula! $T(n) = 2^{n^2/4 + O(n)}$' },
+        { name: 'Equivalence Relations (Bell Numbers)', latex: 'B_n = \\sum_{k=1}^n S(n, k)', notes: '$B_1=1, B_2=2, B_3=5, B_4=15, B_5=52, B_6=203$' },
         { name: 'Equivalence Classes', latex: '[a] = \\{ x \\in A \\mid (x, a) \\in R \\}', notes: 'Non-empty, disjoint, and cover set $A$' },
       ],
       traps: [
         {
-          title: 'Antisymmetric vs Not Symmetric',
+          title: 'Antisymmetric versus Not Symmetric',
           trap: 'Assuming antisymmetric is the opposite of symmetric.',
           counterexample: 'Equality relation $R = \\{(1,1), (2,2)\\}$ is BOTH symmetric and antisymmetric! The relation $\\{(1,2), (2,1), (2,3)\\}$ is NEITHER.',
           examTip: 'Antisymmetric means: if $(a, b) \\in R$ and $(b, a) \\in R$, then $a = b$. It never forbids diagonal pairs!',
+        },
+        {
+          title: 'Transitive Relations Closed-Form Fallacy',
+          trap: 'Assuming there is a simple formula like $2^{n(n-1)}$ for transitive relations.',
+          counterexample: 'For $n=2$, total relations is $16$, but only 13 are transitive. For $n=3$, exactly 171 out of 512 are transitive.',
+          examTip: 'Transitivity is a conditional dependency: $(a,b) \\in R \\land (b,c) \\in R \\implies (a,c) \\in R$. Memorize $T(1)=2, T(2)=13, T(3)=171$.',
+        },
+        {
+          title: 'Composition Injectivity Direction',
+          trap: 'Concluding that if $g \\circ f$ is injective, then BOTH $f$ and $g$ must be injective.',
+          counterexample: 'Only the FIRST function $f$ is guaranteed injective! $g$ only needs to be injective on the restricted image $f(A)$, not its entire codomain.',
+          examTip: 'Rule: If $g \\circ f$ is injective $\\implies$ first function $f$ is injective. If $g \\circ f$ is surjective $\\implies$ second function $g$ is surjective.',
+        },
+        {
+          title: 'Codomain versus Range / Image',
+          trap: 'Treating codomain and range as identical concepts.',
+          counterexample: 'For $f: \\mathbb{R} \\to \\mathbb{R}$ defined by $f(x) = x^2$, the codomain is all of $\\mathbb{R}$, but the range is only non-negative reals $[0, \\infty)$.',
+          examTip: 'A function is surjective if and only if its range equals its entire codomain.',
         },
         {
           title: 'The Empty Relation Trap',
@@ -87,7 +107,7 @@ export const TOPICS = [
     title: 'Proof Techniques & Induction',
     subtitle: 'Contradiction, Contrapositive, Strong Induction & Recursion',
     examCategory: 'test1',
-    badge: 'Core Foundation',
+    badge: 'Core',
     icon: 'BrainCircuit',
     accentColor: 'neon-gold',
     labId: 'proofs',
@@ -132,9 +152,9 @@ export const TOPICS = [
       },
     },
     story: {
-      hook: 'How do software engineers mathematically guarantee that an algorithm like MergeSort or Dijkstra terminates and produces the exact correct result?',
-      csApp: 'Loop invariants in software verification and formal methods (TLA+, Coq, Rust borrow checker) are direct applications of mathematical induction.',
-      keyIntuition: 'Induction is an infinite line of falling dominoes. If the first domino falls (Base Case) and whenever any domino falls the next one must fall (Inductive Step), all infinitely many dominoes will fall.',
+      hook: 'How do software engineers mathematically guarantee that an algorithm terminates and produces the exact correct result across infinite inputs?',
+      csApp: 'In Computer Science (CS), loop invariants and formal software verification engines use the Principle of Mathematical Induction (PMI) to prove that algorithms never crash and to calculate Big-O time complexity.',
+      keyIntuition: 'Induction works like an infinite line of falling dominoes. You only need to verify two simple steps: (1) Push the first domino (Base Case), and (2) Make sure each falling domino knocks down the next one (Inductive Step)!',
     },
     cheatSheet: {
       formulas: [
@@ -175,7 +195,7 @@ export const TOPICS = [
     title: 'Propositional Logic & Truth Tables',
     subtitle: 'Connectives, Tautologies, Equivalences & Rules of Inference',
     examCategory: 'test1',
-    badge: 'Test 1 Milestone (20%)',
+    badge: 'Test 1',
     icon: 'Binary',
     accentColor: 'neon-mint',
     labId: 'logic',
@@ -212,9 +232,9 @@ export const TOPICS = [
       },
     },
     story: {
-      hook: 'How do SAT solvers check billions of circuit gates in AMD/Intel CPUs before they are physically etched onto silicon?',
-      csApp: 'Propositional logic is the bedrock of hardware synthesis, digital logic gates, boolean satisfiability (SAT / SMT solvers), and database query filtering (WHERE clauses).',
-      keyIntuition: 'Truth tables systematically test every parallel universe of True and False. If a statement survives every single universe without a scratch, it is a mathematical Tautology.',
+      hook: 'How do chip designers check billions of digital circuit gates in Central Processing Units (CPUs) before they are physically manufactured?',
+      csApp: 'Boolean logic is the foundation of digital logic gates, hardware synthesis, and Boolean Satisfiability (SAT) / Satisfiability Modulo Theories (SMT) solvers used by chipmakers like Advanced Micro Devices (AMD) and Intel. It also powers database query filters (like Structured Query Language (SQL) WHERE clauses).',
+      keyIntuition: 'A truth table systematically tests every parallel universe of True and False. If a logical statement evaluates to True in every single universe, it is an unbreakable mathematical Tautology.',
     },
     cheatSheet: {
       formulas: [
@@ -255,7 +275,7 @@ export const TOPICS = [
     title: 'Partial Orders, Lattices & Boolean Algebras',
     subtitle: 'Hasse Diagrams, Bounds, Meets, Joins & Complementation',
     examCategory: 'midterm',
-    badge: 'Midterm Core',
+    badge: 'Core',
     icon: 'Layers',
     accentColor: 'neon-purple',
     labId: 'posets',
@@ -266,8 +286,8 @@ export const TOPICS = [
       'a \\lor a\' = \\top, \\quad a \\land a\' = \\bot \\text{ (Complemented Lattice)}',
     ],
     labGuide: {
-      mission: 'Construct Hasse diagrams for divisibility posets $D_n$ and power sets $\\mathcal{P}(S)$, compute LUB/GLB, and audit lattice distributivity.',
-      invariant: 'Lattice Invariant: $\\forall a, b \\in L, \\exists! \\text{ unique } a \\land b \\text{ (GLB)} \\land \\exists! \\text{ unique } a \\lor b \\text{ (LUB)}$',
+      mission: 'Construct Hasse diagrams for divisibility posets $D_n$ and power sets $\\mathcal{P}(S)$, compute Least Upper Bound (LUB) and Greatest Lower Bound (GLB), and audit lattice distributivity.',
+      invariant: 'Lattice Invariant: $\\forall a, b \\in L, \\exists! \\text{ unique } a \\land b \\text{ (Greatest Lower Bound, GLB)} \\land \\exists! \\text{ unique } a \\lor b \\text{ (Least Upper Bound, LUB)}$',
       step1: {
         title: 'Select Poset Type & Parameters',
         desc: 'Choose Divisibility Poset $D_n$ (e.g. $n = 12, 24, 30, 36$) or Power Set $\\mathcal{P}(S)$ on elements $\\{a, b, c\\}$.',
@@ -278,14 +298,14 @@ export const TOPICS = [
       },
       step3: {
         title: 'Calculate Meets, Joins & Test Lattice',
-        desc: 'Pick any two elements to compute their GLB (greatest lower bound / $\\gcd$) and LUB (least upper bound / $\\operatorname{lcm}$).',
+        desc: 'Pick any two elements to compute their Greatest Lower Bound (GLB / $\\gcd$) and Least Upper Bound (LUB / $\\operatorname{lcm}$).',
       },
     },
     quickQuest: {
-      question: 'In the divisibility poset $(D_{36}, \\mid)$, what are the GLB and LUB of elements 12 and 18?',
+      question: 'In the divisibility poset $(D_{36}, \\mid)$, what are the Greatest Lower Bound (GLB) and Least Upper Bound (LUB) of elements 12 and 18?',
       options: ['$\\text{GLB} = 6, \\text{LUB} = 36$', '$\\text{GLB} = 2, \\text{LUB} = 36$', '$\\text{GLB} = 6, \\text{LUB} = 24$', 'No GLB exists'],
       correctIndex: 0,
-      explanation: 'In a divisibility poset, $\\text{GLB}(a, b) = \\gcd(a, b) = \\gcd(12, 18) = 6$. $\\text{LUB}(a, b) = \\operatorname{lcm}(a, b) = \\operatorname{lcm}(12, 18) = 36$. Both 6 and 36 belong to $D_{36}$.',
+      explanation: 'In a divisibility poset, Greatest Lower Bound is $\\text{GLB}(a, b) = \\gcd(a, b) = \\gcd(12, 18) = 6$, and Least Upper Bound is $\\text{LUB}(a, b) = \\operatorname{lcm}(a, b) = \\operatorname{lcm}(12, 18) = 36$. Both 6 and 36 belong to $D_{36}$.',
       loadPayload: {
         type: 'poset',
         posetType: 'divisors',
@@ -293,9 +313,9 @@ export const TOPICS = [
       },
     },
     story: {
-      hook: 'How does Git merge two branches without losing work, and how does Java/TypeScript resolve complex multiple interface inheritance?',
-      csApp: 'Git commit graphs are partially ordered sets. Lowest Common Ancestor (LCA) in version control is literally the GLB (Meet) in a poset! Type systems compute Upper and Lower type bounds using Lattices.',
-      keyIntuition: 'A poset is a hierarchy where not every pair can be directly compared. A Hasse diagram strips away all redundant clutter: draw only direct upward links!',
+      hook: 'How does version control merge branches without losing work, and how do operating systems schedule tasks without deadlocks?',
+      csApp: 'Version control systems (like Git) model project histories as Partially Ordered Sets (Posets) and Directed Acyclic Graphs (DAGs). The Lowest Common Ancestor (LCA) in a branch merge is literally the Greatest Lower Bound (GLB, also called Meet $\\land$) in a poset! Hardware circuits use Boolean algebras to simplify logic gates.',
+      keyIntuition: 'In a total order, every pair of items can be compared ($a \\le b$ or $b \\le a$). In a partial order, some items are independent and cannot be directly compared. A Hasse diagram draws this hierarchy cleanly by omitting obvious shortcuts.',
     },
     cheatSheet: {
       formulas: [
@@ -307,7 +327,7 @@ export const TOPICS = [
       ],
       traps: [
         {
-          title: 'Maximal vs Greatest Element',
+          title: 'Maximal versus Greatest Element',
           trap: 'Confusing a maximal element with the greatest (maximum) element.',
           counterexample: 'A poset can have MULTIPLE maximal elements (no element is above them), but at most ONE greatest element (which must be above EVERY element).',
           examTip: 'Top of a Hasse diagram has maximal elements. If there are two unconnected tops, there is NO greatest element.',
@@ -335,7 +355,7 @@ export const TOPICS = [
     title: 'Modular Arithmetic & Number Theory',
     subtitle: 'Bézout Coefficients, Modular Inverses & Chinese Remainder Theorem',
     examCategory: 'midterm',
-    badge: 'Midterm Core',
+    badge: 'Core',
     icon: 'Calculator',
     accentColor: 'neon-pink',
     labId: 'modular',
@@ -373,9 +393,9 @@ export const TOPICS = [
       },
     },
     story: {
-      hook: 'How does every HTTPS website protect your credit card from hackers without sharing a secret password beforehand?',
-      csApp: 'RSA public-key encryption and Diffie-Hellman key exchanges are 100% powered by modular exponentiation, Euler’s totient function, and modular inverses computed via Extended Euclid.',
-      keyIntuition: 'Modular arithmetic is arithmetic on a circle (like a 12-hour clock). Numbers loop endlessly. The Extended Euclidean Algorithm is the magic wrench that lets us undo multiplication on the circle.',
+      hook: 'How does every Hypertext Transfer Protocol Secure (HTTPS) website protect your passwords and credit cards without sharing a secret key beforehand?',
+      csApp: 'Public-key cryptography (such as the Rivest-Shamir-Adleman (RSA) cryptosystem and Diffie-Hellman key exchange) is powered entirely by modular exponentiation, Euler’s totient function, and modular multiplicative inverses calculated with the Extended Euclidean Algorithm.',
+      keyIntuition: 'Modular arithmetic is arithmetic on a circular clock. Numbers wrap around in a finite loop. The Extended Euclidean Algorithm is the master tool that allows us to divide on a clock by finding modular inverses.',
     },
     cheatSheet: {
       formulas: [
@@ -384,7 +404,7 @@ export const TOPICS = [
         { name: 'Modular Inverse Condition', latex: 'a^{-1} \\pmod n \\text{ exists} \\iff \\gcd(a, n) = 1', notes: 'Must be strictly coprime: $\\gcd(a, n) = 1$' },
         { name: 'Euler’s Totient Formula', latex: '\\phi(n) = n \\prod_{p \\mid n} \\left(1 - \\frac{1}{p}\\right)', notes: 'Count of integers $1 \\le k \\le n$ coprime to $n$' },
         { name: 'Fermat’s Little Theorem', latex: 'a^{p-1} \\equiv 1 \\pmod p \\text{ for prime } p, p \\nmid a', notes: 'Special case of Euler when $n = p$ is prime' },
-        { name: 'CRT Unique Solution', latex: 'x \\equiv \\sum_{i=1}^k a_i M_i y_i \\pmod M', notes: 'Where $M = \\prod m_i, M_i = M/m_i, y_i = M_i^{-1} \\pmod{m_i}$' },
+        { name: 'Chinese Remainder Theorem (CRT) Unique Solution', latex: 'x \\equiv \\sum_{i=1}^k a_i M_i y_i \\pmod M', notes: 'Where $M = \\prod m_i, M_i = M/m_i, y_i = M_i^{-1} \\pmod{m_i}$' },
       ],
       traps: [
         {
@@ -400,9 +420,9 @@ export const TOPICS = [
           examTip: 'Always convert negative remainders to the canonical range $[0, n-1]$ by adding $n$.',
         },
         {
-          title: 'Pairwise Coprime in CRT',
+          title: 'Pairwise Coprime in Chinese Remainder Theorem (CRT)',
           trap: 'Applying the standard Chinese Remainder Theorem when moduli are not pairwise coprime.',
-          counterexample: '$x \\equiv 1 \\pmod 4$ and $x \\equiv 2 \\pmod 6$ cannot be solved directly with CRT formula because $\\gcd(4, 6) = 2 \\ne 1$.',
+          counterexample: '$x \\equiv 1 \\pmod 4$ and $x \\equiv 2 \\pmod 6$ cannot be solved directly with the Chinese Remainder Theorem (CRT) formula because $\\gcd(4, 6) = 2 \\ne 1$.',
           examTip: 'Always verify $\\gcd(m_i, m_j) = 1$ for all $i \\ne j$ before applying Chinese Remainder Theorem.',
         },
       ],
@@ -416,7 +436,7 @@ export const TOPICS = [
     title: 'Basic Algebraic Structures',
     subtitle: 'Semigroups, Monoids, Groups, Cayley Tables & Subgroups',
     examCategory: 'midterm',
-    badge: 'Midterm Milestone (30%)',
+    badge: 'Midterm',
     icon: 'Boxes',
     accentColor: 'neon-cyan',
     labId: 'groups',
@@ -459,9 +479,9 @@ export const TOPICS = [
       },
     },
     story: {
-      hook: 'How do Rubik’s cube solvers, quantum physics symmetries, and AES-256 state encryption share the exact same algebraic engine?',
-      csApp: 'Group theory models symmetries, error-correcting codes (Reed-Solomon, Hamming), cryptographic permutation groups (AES S-box), and functional programming monoids.',
-      keyIntuition: 'A group is a set of actions that can be combined, has a "do nothing" action (identity), and where every action can be completely undone (inverse).',
+      hook: 'Why is a 3x3 Rubik’s Cube solvable from any scrambled position in 20 moves or fewer?',
+      csApp: 'Group theory is the mathematical study of symmetry. In Computer Science (CS), it is fundamental to cryptography (elliptic curve groups and the Advanced Encryption Standard (AES)), error-correcting codes, and 3D computer graphics transformations.',
+      keyIntuition: 'A group is a mathematical system with an "undo" button. Every valid move has an exact inverse that returns you to the starting point (the identity element).',
     },
     cheatSheet: {
       formulas: [
@@ -499,24 +519,24 @@ export const TOPICS = [
     week: 'Weeks 9–10',
     unitNumber: 7,
     title: 'Combinatorics & Counting Principles',
-    subtitle: 'Permutations, Combinations, Stars & Bars, PIE & Pigeonhole',
+    subtitle: 'Permutations, Combinations, Stars & Bars, Principle of Inclusion-Exclusion (PIE) & Pigeonhole',
     examCategory: 'test2',
-    badge: 'Test 2 Core',
+    badge: 'Test 2',
     icon: 'Sparkles',
     accentColor: 'neon-gold',
     labId: 'combinatorics',
     keyFormulas: [
       'P(n, r) = \\frac{n!}{(n-r)!}, \\quad \\binom{n}{r} = \\frac{n!}{r!(n-r)!}',
       '\\binom{n + r - 1}{r} \\text{ (Stars and Bars with repetition)}',
-      '|A \\cup B \\cup C| = \\sum |A| - \\sum |A \\cap B| + |A \\cap B \\cap C| \\text{ (PIE)}',
+      '|A \\cup B \\cup C| = \\sum |A| - \\sum |A \\cap B| + |A \\cap B \\cap C| \\text{ (Principle of Inclusion-Exclusion / PIE)}',
       'D_n = n! \\sum_{k=0}^n \\frac{(-1)^k}{k!} \\approx \\left[ \\frac{n!}{e} \\right] \\text{ (Derangements)}',
     ],
     labGuide: {
-      mission: 'Master combinatorial counting: Stars & Bars divider placement, 3-set PIE Venn diagrams, and Derangements.',
-      invariant: 'PIE Invariant: $|A \\cup B \\cup C| = S_1 - S_2 + S_3$',
+      mission: 'Master combinatorial counting: Stars & Bars divider placement, 3-set Principle of Inclusion-Exclusion (PIE) Venn diagrams, and Derangements.',
+      invariant: 'Principle of Inclusion-Exclusion (PIE) Invariant: $|A \\cup B \\cup C| = S_1 - S_2 + S_3$',
       step1: {
         title: 'Choose Counting Model',
-        desc: 'Select Permutations/Combinations Wizard, Stars & Bars (non-negative integer solutions), or 3-Set PIE.',
+        desc: 'Select Permutations/Combinations Wizard, Stars & Bars (non-negative integer solutions), or 3-Set Principle of Inclusion-Exclusion (PIE).',
       },
       step2: {
         title: 'Adjust Parameters n and r',
@@ -540,9 +560,9 @@ export const TOPICS = [
       },
     },
     story: {
-      hook: 'How many possible IPv6 addresses exist, and what are the exact odds of a hash collision in a SHA-256 blockchain block?',
-      csApp: 'Combinatorics dictates the algorithmic time complexity of search algorithms, memory layout permutations, randomized algorithm analysis, and network packet capacity.',
-      keyIntuition: 'Combinatorics is the science of counting without actually counting. Instead of enumerating millions of cases, we map the problem onto canonical structures like bins, dividers, or set intersections.',
+      hook: 'How many unique Internet Protocol version 6 (IPv6) addresses exist, and what are the exact odds of a hash collision in a Secure Hash Algorithm 256-bit (SHA-256) blockchain block?',
+      csApp: 'Combinatorics determines the algorithmic time complexity of search algorithms, memory layout permutations, randomized algorithm analysis, and network packet capacity.',
+      keyIntuition: 'Combinatorics is the science of counting without listing every case. Instead of writing down billions of combinations, we map the problem onto simple models like divider bars between identical items (Stars and Bars) or overlapping circles (the Principle of Inclusion-Exclusion, PIE).',
     },
     cheatSheet: {
       formulas: [
@@ -554,14 +574,14 @@ export const TOPICS = [
       ],
       traps: [
         {
-          title: 'Distinguishable vs Indistinguishable Items',
+          title: 'Distinguishable versus Indistinguishable Items',
           trap: 'Using combinations $C(n, r)$ when items are distinguishable, or powers $n^r$ when order does not matter.',
           counterexample: 'Putting 3 distinct balls into 2 distinct boxes has $2^3 = 8$ ways. Putting 3 identical balls into 2 distinct boxes has $\\binom{3+2-1}{3} = 4$ ways.',
           examTip: 'Always write down explicitly: Are items distinct? Are bins distinct? Can bins be empty?',
         },
         {
-          title: 'Non-negative vs Positive Integer Solutions',
-          trap: 'Using the wrong Stars & Bars formula when variables have lower bounds ($x_i \\ge 1$ vs $x_i \\ge 0$).',
+          title: 'Non-Negative versus Positive Integer Solutions',
+          trap: 'Using the wrong Stars & Bars formula when variables have lower bounds ($x_i \\ge 1$ versus $x_i \\ge 0$).',
           counterexample: '$x_1 + x_2 = 4$ with $x_i \\ge 0$ has $\\binom{4+2-1}{4} = 5$ solutions. With $x_i \\ge 1$, substitute $y_i = x_i - 1$ to get $\\binom{2+2-1}{2} = 3$ solutions.',
           examTip: 'Pre-allocate required minimum items first, then distribute the remaining items with standard Stars & Bars.',
         },
@@ -569,7 +589,7 @@ export const TOPICS = [
           title: 'Double Counting in Overlapping Cases',
           trap: 'Summing overlapping sets without subtracting intersections.',
           counterexample: 'Numbers $\\le 100$ divisible by 2 (50) or 3 (33). The sum $50 + 33 = 83$ double-counts numbers divisible by 6 (16). Correct: $50 + 33 - 16 = 67$.',
-          examTip: 'Whenever you see "or", immediately check whether the events are mutually exclusive. If not, apply PIE!',
+          examTip: 'Whenever you see "or", immediately check whether the events are mutually exclusive. If not, apply the Principle of Inclusion-Exclusion (PIE)!',
         },
       ],
     },
@@ -582,7 +602,7 @@ export const TOPICS = [
     title: 'Graph Theory, Trees & Planarity',
     subtitle: 'Handshaking, Bipartite, Eulerian, Spanning Trees, Coloring',
     examCategory: 'final',
-    badge: 'Final Exam Milestone (40%)',
+    badge: 'Final',
     icon: 'Share2',
     accentColor: 'neon-mint',
     labId: 'graphs',
@@ -594,7 +614,7 @@ export const TOPICS = [
       'E \\le 3V - 6 \\text{ (Planar Simple Graph bound for } V \\ge 3)',
     ],
     labGuide: {
-      mission: 'Analyze graph degree sequences, verify the Handshaking Lemma, test 2-coloring bipartiteness, and run Kruskal’s MST.',
+      mission: 'Analyze graph degree sequences, verify the Handshaking Lemma, test 2-coloring bipartiteness, and run Kruskal’s Minimum Spanning Tree (MST).',
       invariant: 'Handshaking Invariant: $\\sum_{v \\in V} \\deg(v) = 2|E| \\quad \\text{holds unconditionally for all graphs}$',
       step1: {
         title: 'Design or Load Graph Topology',
@@ -606,7 +626,7 @@ export const TOPICS = [
       },
       step3: {
         title: 'Compute Minimum Spanning Tree',
-        desc: 'Run Kruskal’s greedy algorithm with Union-Find to find the MST and verify $|E| = |V| - 1$.',
+        desc: 'Run Kruskal’s greedy algorithm with Union-Find to find the Minimum Spanning Tree (MST) and verify $|E| = |V| - 1$.',
       },
     },
     quickQuest: {
@@ -620,9 +640,9 @@ export const TOPICS = [
       },
     },
     story: {
-      hook: 'How does Google Maps compute the fastest route through millions of road segments in 12 milliseconds?',
-      csApp: 'Graphs represent social networks, internet routing protocols (BGP), dependency resolution in package managers (npm, pip), garbage collection mark-and-sweep, and neural network computation graphs.',
-      keyIntuition: 'A graph is simply a set of dots (vertices) connected by lines (edges). Euler proved in 1736 that deep structural properties depend only on connections, not physical geometry.',
+      hook: 'How does a navigation system find the fastest driving route across millions of road segments in 12 milliseconds?',
+      csApp: 'Graphs represent social networks, internet routing protocols such as the Border Gateway Protocol (BGP), dependency resolution in package managers like Node Package Manager (npm) and Pip Installs Packages (pip), and neural network computation graphs.',
+      keyIntuition: 'A graph is simply dots (called vertices) connected by lines (called edges). In graph theory, physical distances do not matter—only which dots are connected to which dots!',
     },
     cheatSheet: {
       formulas: [
@@ -635,7 +655,7 @@ export const TOPICS = [
       ],
       traps: [
         {
-          title: 'Eulerian Trail vs Circuit',
+          title: 'Eulerian Trail versus Circuit',
           trap: 'Thinking an Eulerian circuit exists when there are 2 odd-degree vertices.',
           counterexample: 'A connected graph with EXACTLY 2 odd-degree vertices has an Eulerian TRAIL (starts at one odd vertex, ends at the other), NOT an Eulerian CIRCUIT (which requires ALL degrees to be even).',
           examTip: 'Circuit = starts and ends at the same vertex (0 odd degrees). Trail = open path visiting all edges (2 odd degrees).',
@@ -647,9 +667,9 @@ export const TOPICS = [
           examTip: '$E \\le 3V - 6$ is a NECESSARY condition for planarity, NOT a sufficient condition!',
         },
         {
-          title: 'Hamiltonian vs Eulerian Confusion',
+          title: 'Hamiltonian versus Eulerian Cycles',
           trap: 'Confusing Eulerian (visits every EDGE once) with Hamiltonian (visits every VERTEX once).',
-          counterexample: 'Checking Eulerian is easy (check even degrees in $O(V+E)$). Checking Hamiltonian is NP-complete!',
+          counterexample: 'Checking Eulerian is easy (check even degrees in $O(V+E)$). Checking Hamiltonian is Nondeterministic Polynomial-time Complete (NP-Complete)!',
           examTip: 'Eulerian = Edges (Euler/Edges). Hamiltonian = Vertices.',
         },
       ],

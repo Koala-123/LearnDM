@@ -1,6 +1,6 @@
 export const QUESTIONS_DATA = [
   // =========================================================================
-  // UNIT 1: SETS, RELATIONS & FUNCTIONS (15 Questions)
+  // UNIT 1: SETS, RELATIONS & FUNCTIONS (20 Questions)
   // =========================================================================
   {
     id: 'rel-q1',
@@ -189,6 +189,67 @@ export const QUESTIONS_DATA = [
     correctIndex: 1,
     explanation: 'The intersection $R_1 \\cap R_2$ is always an equivalence relation! Reflexivity: $(a,a) \\in R_1$ and $(a,a) \\in R_2$, so $(a,a) \\in R_1 \\cap R_2$. Symmetry and transitivity hold directly. Note: The union $R_1 \\cup R_2$ is generally NOT transitive!',
   },
+  {
+    id: 'rel-q16',
+    unitId: 'relations',
+    tier: 2,
+    title: 'Number of Transitive Relations on Two Elements',
+    prompt: 'For a set $A = \\{1, 2\\}$, how many of the $2^{2^2} = 16$ possible binary relations on $A$ are TRANSITIVE?',
+    options: ['10', '13', '14', '16'],
+    correctIndex: 1,
+    explanation: 'Transitivity states $(a, b) \\in R \\land (b, c) \\in R \\implies (a, c) \\in R$. With 2 elements, transitivity can only fail if both $(1, 2)$ and $(2, 1)$ belong to $R$. If so, transitivity demands that $(1, 1) \\in R$ and $(2, 2) \\in R$. Only 3 relations contain $\{(1, 2), (2, 1)\}$ without both diagonal pairs: (1) $\{(1, 2), (2, 1)\}$, (2) $\{(1, 1), (1, 2), (2, 1)\}$, (3) $\{(2, 2), (1, 2), (2, 1)\}$. Thus, exactly $16 - 3 = 13$ relations are transitive.',
+    loadLabPayload: { type: 'relation', elements: ['1', '2'], pairs: [['1', '2'], ['2', '1']] },
+  },
+  {
+    id: 'rel-q17',
+    unitId: 'relations',
+    tier: 2,
+    title: 'Total Functions versus Partial Functions Count',
+    prompt: 'Let $|A| = 3$ and $|B| = 4$. How many TOTAL functions $f: A \\to B$ exist, and how many PARTIAL functions $f: A \\to B$ exist?',
+    options: [
+      'Total: $4^3 = 64$; Partial: $5^3 = 125$',
+      'Total: $3^4 = 81$; Partial: $4^4 = 256$',
+      'Total: $4^3 = 64$; Partial: $4^3 + 1 = 65$',
+      'Total: $12$; Partial: $15$',
+    ],
+    correctIndex: 0,
+    explanation: 'For total functions, each of the $|A| = 3$ elements has $|B| = 4$ independent output choices: $4 \\times 4 \\times 4 = 4^3 = 64$. For partial functions, each element can either map to one of the 4 elements in $B$ or remain undefined (a 5th choice): $(4 + 1)^3 = 5^3 = 125$.',
+  },
+  {
+    id: 'rel-q18',
+    unitId: 'relations',
+    tier: 2,
+    title: 'Counting Injective Functions (One-to-One)',
+    prompt: 'Let $|A| = 3$ and $|B| = 5$. How many INJECTIVE (one-to-one) functions $f: A \\to B$ can be constructed?',
+    options: ['15', '60', '125', '243'],
+    correctIndex: 1,
+    explanation: 'In an injective function, distinct inputs must map to distinct outputs. The first input in $A$ has 5 choices, the second has 4 choices, and the third has 3 choices. The number of injections is the permutation $P(5, 3) = \\frac{5!}{(5-3)!} = 5 \\times 4 \\times 3 = 60$. (Note: If $|A| > |B|$, no injection can exist by the Pigeonhole Principle).',
+  },
+  {
+    id: 'rel-q19',
+    unitId: 'relations',
+    tier: 3,
+    title: 'Surjective Functions and Stirling Numbers',
+    prompt: 'How many SURJECTIVE (onto) functions exist from a domain of 4 elements to a codomain of 3 elements?',
+    options: ['24', '36', '64', '81'],
+    correctIndex: 1,
+    explanation: 'A function is surjective if its range covers all 3 codomain elements. The number of surjections from $|A| = 4$ to $|B| = 3$ is $3! \\cdot S(4, 3)$, where $S(4, 3) = 6$ is the Stirling number of the second kind (partitioning 4 elements into 3 non-empty blocks). Thus: $3! \\times 6 = 6 \\times 6 = 36$. (Alternatively by the Principle of Inclusion-Exclusion (PIE): $3^4 - \\binom{3}{1} 2^4 + \\binom{3}{2} 1^4 = 81 - 48 + 3 = 36$).',
+  },
+  {
+    id: 'rel-q20',
+    unitId: 'relations',
+    tier: 3,
+    title: 'Equivalence Class Disjointness & Partition Invariant',
+    prompt: 'Let $R$ be an equivalence relation on set $A$, and let $a, b \\in A$. Which of the following statements is ALWAYS TRUE regarding the equivalence classes $[a]$ and $[b]$?',
+    options: [
+      'Either $[a] = [b]$ or $[a] \\cap [b] = \\emptyset$',
+      '$[a] \\subseteq [b]$ or $[b] \\subseteq [a]$',
+      '$|[a]| = |[b]|$ for all $a, b$',
+      '$[a] \\cap [b]$ always contains at least one common element',
+    ],
+    correctIndex: 0,
+    explanation: 'By the Fundamental Theorem of Equivalence Relations, two equivalence classes are either IDENTICAL or COMPLETELY DISJOINT. If they shared even a single common element $x \\in [a] \\cap [b]$, then $(x, a) \\in R$ and $(x, b) \\in R$. By symmetry and transitivity, $(a, b) \\in R$, which forces the entire classes to be identical: $[a] = [b]$! They can never partially overlap.',
+  },
 
   // =========================================================================
   // UNIT 2: PROOFS & INDUCTION (15 Questions)
@@ -289,7 +350,7 @@ export const QUESTIONS_DATA = [
     id: 'proof-q8',
     unitId: 'proofs',
     tier: 2,
-    title: 'Weak vs Strong Induction Distinction',
+    title: 'Weak versus Strong Induction Distinction',
     prompt: 'Why is Strong Induction necessary to prove that every integer $n > 1$ can be factored into primes?',
     options: [
       'Because weak induction does not hold for integers greater than 10',
@@ -472,7 +533,7 @@ export const QUESTIONS_DATA = [
     id: 'log-q7',
     unitId: 'logic',
     tier: 2,
-    title: 'Converse vs Inverse vs Contrapositive',
+    title: 'Converse versus Inverse versus Contrapositive',
     prompt: 'Given the conditional statement $p \\to q$, what is its INVERSE?',
     options: ['$q \\to p$', '$\\neg q \\to \\neg p$', '$\\neg p \\to \\neg q$', '$\\neg p \\lor q$'],
     correctIndex: 2,
@@ -497,7 +558,7 @@ export const QUESTIONS_DATA = [
     prompt: 'What can be inferred from the two clauses $(p \\lor q)$ and $(\\neg p \\lor r)$ using the Resolution Rule?',
     options: ['$q \\lor r$', '$q \\land r$', '$p \\lor r$', '$\\neg q \\lor r$'],
     correctIndex: 0,
-    explanation: 'The resolution rule cancels the complementary literals $p$ and $\\neg p$: from $(p \\lor q)$ and $(\\neg p \\lor r)$, the resolvent is $q \\lor r$. This is the foundation of modern SAT solvers.',
+    explanation: 'The resolution rule cancels the complementary literals $p$ and $\\neg p$: from $(p \\lor q)$ and $(\\neg p \\lor r)$, the resolvent is $q \\lor r$. This is the foundation of modern Boolean Satisfiability (SAT) solvers.',
   },
   {
     id: 'log-q10',
@@ -598,7 +659,7 @@ export const QUESTIONS_DATA = [
     id: 'pos-q2',
     unitId: 'posets',
     tier: 1,
-    title: 'GLB and LUB in Divisibility Posets',
+    title: 'Greatest Lower Bound (GLB) and Least Upper Bound (LUB) in Divisibility Posets',
     prompt: 'In the divisibility poset $(D_{36}, \\mid)$, what are the Greatest Lower Bound (GLB) and Least Upper Bound (LUB) of 12 and 18?',
     options: [
       'GLB = 6, LUB = 36',
@@ -633,12 +694,12 @@ export const QUESTIONS_DATA = [
     prompt: 'A poset $(L, \\le)$ is called a LATTICE if and only if:',
     options: [
       'It has a unique maximal element',
-      'Every pair of elements has both a unique GLB (meet) and unique LUB (join)',
+      'Every pair of elements has both a unique Greatest Lower Bound / GLB (meet) and unique Least Upper Bound / LUB (join)',
       'All elements are comparable to each other',
       'It contains no cycles',
     ],
     correctIndex: 1,
-    explanation: 'By definition, a lattice is a poset in which every two elements $a, b$ possess a unique meet $a \\land b = \\text{GLB}(a, b)$ and a unique join $a \\lor b = \\text{LUB}(a, b)$.',
+    explanation: 'By definition, a lattice is a poset in which every two elements $a, b$ possess a unique meet $a \\land b = \\text{GLB}(a, b)$ (Greatest Lower Bound) and a unique join $a \\lor b = \\text{LUB}(a, b)$ (Least Upper Bound).',
   },
   {
     id: 'pos-q5',
@@ -723,7 +784,7 @@ export const QUESTIONS_DATA = [
     id: 'pos-q11',
     unitId: 'posets',
     tier: 2,
-    title: 'Maximal vs Greatest Element',
+    title: 'Maximal versus Greatest Element',
     prompt: 'Consider the poset $S = \\{2, 3, 4, 6, 9\\}$ ordered by divisibility. What are the maximal elements and greatest element?',
     options: [
       'Maximal: $\\{4, 6, 9\\}$; Greatest: None',
@@ -757,7 +818,7 @@ export const QUESTIONS_DATA = [
       'Only if $S$ has odd cardinality',
     ],
     correctIndex: 1,
-    explanation: 'A sublattice must preserve the operations of meet and join: $\\forall a, b \\in S, a \\land_S b = a \\land_L b$ and $a \\lor_S b = a \\lor_L b$. $S$ could have a least upper bound within $S$ that is strictly higher than their LUB in the full lattice $L$!',
+    explanation: 'A sublattice must preserve the operations of meet and join: $\\forall a, b \\in S, a \\land_S b = a \\land_L b$ and $a \\lor_S b = a \\lor_L b$. $S$ could have a least upper bound within $S$ that is strictly higher than their Least Upper Bound (LUB) in the full lattice $L$!',
   },
   {
     id: 'pos-q14',
@@ -932,7 +993,7 @@ export const QUESTIONS_DATA = [
     id: 'num-q13',
     unitId: 'modular',
     tier: 3,
-    title: 'Solving Incongruent CRT with Non-Coprime Moduli',
+    title: 'Solving Incongruent Chinese Remainder Theorem (CRT) with Non-Coprime Moduli',
     prompt: 'Does the system $x \\equiv 1 \\pmod 4$ and $x \\equiv 2 \\pmod 6$ have any simultaneous integer solution?',
     options: [
       'Yes, $x = 8$',
@@ -1169,7 +1230,7 @@ export const QUESTIONS_DATA = [
     id: 'comb-q1',
     unitId: 'combinatorics',
     tier: 1,
-    title: 'Permutations vs Combinations',
+    title: 'Permutations versus Combinations',
     prompt: 'In a class of 20 students, how many ways can a President, Vice President, and Secretary be chosen?',
     options: ['$P(20, 3) = 6840$', '$\\binom{20}{3} = 1140$', '$20^3 = 8000$', '$3^{20}$'],
     correctIndex: 0,
@@ -1249,11 +1310,11 @@ export const QUESTIONS_DATA = [
     id: 'comb-q8',
     unitId: 'combinatorics',
     tier: 2,
-    title: 'PIE Divisibility Counting',
+    title: 'Principle of Inclusion-Exclusion (PIE) Divisibility Counting',
     prompt: 'How many integers between 1 and 100 (inclusive) are divisible by 2 or 3?',
     options: ['50', '67', '83', '33'],
     correctIndex: 1,
-    explanation: 'Let $A$ be divisible by 2 ($|A| = \\lfloor 100/2 \\rfloor = 50$). Let $B$ be divisible by 3 ($|B| = \\lfloor 100/3 \\rfloor = 33$). $A \\cap B$ are divisible by $\\operatorname{lcm}(2, 3) = 6$ ($|A \\cap B| = \\lfloor 100/6 \\rfloor = 16$). By PIE: $|A \\cup B| = 50 + 33 - 16 = 67$.',
+    explanation: 'Let $A$ be divisible by 2 ($|A| = \\lfloor 100/2 \\rfloor = 50$). Let $B$ be divisible by 3 ($|B| = \\lfloor 100/3 \\rfloor = 33$). $A \\cap B$ are divisible by $\\operatorname{lcm}(2, 3) = 6$ ($|A \\cap B| = \\lfloor 100/6 \\rfloor = 16$). By Principle of Inclusion-Exclusion (PIE): $|A \\cup B| = 50 + 33 - 16 = 67$.',
   },
   {
     id: 'comb-q9',
@@ -1290,11 +1351,11 @@ export const QUESTIONS_DATA = [
     id: 'comb-q12',
     unitId: 'combinatorics',
     tier: 3,
-    title: 'Stars and Bars with Upper Bounds (PIE Integration)',
+    title: 'Stars and Bars with Upper Bounds (Principle of Inclusion-Exclusion / PIE Integration)',
     prompt: 'How many integer solutions exist for $x_1 + x_2 + x_3 = 11$ with $0 \\le x_i \\le 5$ for each $i$?',
     options: ['12', '15', '21', '78'],
     correctIndex: 1,
-    explanation: 'Total unrestricted solutions: $\\binom{11 + 3 - 1}{2} = \\binom{13}{2} = 78$. Let $A_i$ be solutions where $x_i \\ge 6$. Substituting $y_i = x_i - 6 \\ge 0$ gives $y_i + x_j + x_k = 11 - 6 = 5$, with $\\binom{5+2}{2} = 21$ solutions. There are 3 such sets: $\\sum |A_i| = 3 \\times 21 = 63$. Can two variables exceed 5? $x_1 + x_2 \\ge 12 > 11$, impossible! Thus $|A_i \\cap A_j| = 0$. By PIE: $78 - 63 = 15$.',
+    explanation: 'Total unrestricted solutions: $\\binom{11 + 3 - 1}{2} = \\binom{13}{2} = 78$. Let $A_i$ be solutions where $x_i \\ge 6$. Substituting $y_i = x_i - 6 \\ge 0$ gives $y_i + x_j + x_k = 11 - 6 = 5$, with $\\binom{5+2}{2} = 21$ solutions. There are 3 such sets: $\\sum |A_i| = 3 \\times 21 = 63$. Can two variables exceed 5? $x_1 + x_2 \\ge 12 > 11$, impossible! Thus $|A_i \\cap A_j| = 0$. By Principle of Inclusion-Exclusion (PIE): $78 - 63 = 15$.',
   },
   {
     id: 'comb-q13',
@@ -1442,7 +1503,7 @@ export const QUESTIONS_DATA = [
     id: 'grp-th-q10',
     unitId: 'graphs',
     tier: 2,
-    title: 'Eulerian Trail vs Circuit Identification',
+    title: 'Eulerian Trail versus Circuit Identification',
     prompt: 'A connected graph has degrees: 2, 2, 3, 3, 4, 4. What can be traversed in this graph?',
     options: [
       'An Eulerian Circuit (starts and ends at the same vertex)',

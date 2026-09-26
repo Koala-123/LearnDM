@@ -19,7 +19,6 @@ const QUESTIONS_PER_PAGE = 5;
 export default function PracticeArenaScreen({
   topicId,
   onLoadLab,
-  onAddXp,
 }) {
   const [selectedTier, setSelectedTier] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
@@ -53,7 +52,6 @@ export default function PracticeArenaScreen({
     setShowExplanation((prev) => ({ ...prev, [qId]: true }));
 
     if (optionIdx === correctIdx) {
-      if (onAddXp) onAddXp(50);
       confetti({
         particleCount: 55,
         spread: 65,
@@ -78,7 +76,10 @@ export default function PracticeArenaScreen({
   return (
     <div className="space-y-6 animate-fadeIn max-w-5xl mx-auto">
       {/* Practice Arena Scoreboard & Stats Banner */}
-      <div className="flex flex-wrap items-center justify-between gap-4 p-5 sm:p-7 rounded-3xl bg-gradient-to-br from-cosmic-900 via-cosmic-850 to-cosmic-900 border border-neon-purple/30 shadow-xl shadow-black/40">
+      <section
+        aria-label="Practice Arena Overview"
+        className="flex flex-wrap items-center justify-between gap-4 p-5 sm:p-7 rounded-3xl bg-gradient-to-br from-cosmic-900 via-cosmic-850 to-cosmic-900 border border-neon-purple/30 shadow-xl shadow-black/40"
+      >
         <div>
           <div className="flex items-center gap-2 mb-1.5">
             <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-neon-purple/20 text-neon-purple border border-neon-purple/40">
@@ -105,30 +106,35 @@ export default function PracticeArenaScreen({
             </div>
           </div>
           <div className="px-4 py-2.5 rounded-2xl bg-cosmic-950/80 border border-cosmic-750 text-center">
-            <div className="text-xs font-mono text-slate-400 uppercase font-semibold">XP Yield</div>
-            <div className="text-base sm:text-lg font-extrabold text-neon-gold">
-              +{solvedCount * 50} XP
+            <div className="text-xs font-mono text-slate-400 uppercase font-semibold">Completion</div>
+            <div className="text-base sm:text-lg font-extrabold text-neon-cyan">
+              {questions.length > 0 ? Math.round((solvedCount / questions.length) * 100) : 0}%
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Difficulty Filter Tabs & Controls */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-2.5 bg-cosmic-900/80 rounded-2xl border border-cosmic-750">
+      <div
+        role="group"
+        aria-label="Filter problems by tier"
+        className="flex flex-wrap items-center justify-between gap-3 p-2.5 bg-cosmic-900/80 rounded-2xl border border-cosmic-750"
+      >
         <div className="flex flex-wrap items-center gap-2">
           {[
             { id: 'all', label: `All (${questions.length})` },
-            { id: '1', label: `🟢 Level 1: Understanding (${questions.filter((q) => q.tier === 1).length})` },
-            { id: '2', label: `🟡 Level 2: Exam Style (${questions.filter((q) => q.tier === 2).length})` },
-            { id: '3', label: `🔴 Level 3: Hard / Traps (${questions.filter((q) => q.tier === 3).length})` },
+            { id: '1', label: `🟢 Tier 1: Understanding (${questions.filter((q) => q.tier === 1).length})` },
+            { id: '2', label: `🟡 Tier 2: Exam Style (${questions.filter((q) => q.tier === 2).length})` },
+            { id: '3', label: `🔴 Tier 3: Hard / Traps (${questions.filter((q) => q.tier === 3).length})` },
           ].map((tier) => (
             <button
               key={tier.id}
+              aria-pressed={selectedTier === tier.id}
               onClick={() => {
                 setSelectedTier(tier.id);
                 setCurrentPage(1);
               }}
-              className={`btn-arcade px-3.5 py-2 text-xs sm:text-sm rounded-full border font-semibold transition ${
+              className={`btn-arcade px-3.5 py-2 text-xs sm:text-sm rounded-full border font-semibold transition focus-visible:ring-2 focus-visible:ring-neon-cyan focus:outline-none ${
                 selectedTier === tier.id
                   ? 'bg-neon-purple text-white border-neon-purple shadow-glow-purple font-bold'
                   : 'bg-cosmic-950/60 border-cosmic-750 text-slate-300 hover:text-white'
@@ -140,7 +146,7 @@ export default function PracticeArenaScreen({
         </div>
 
         {/* Page status */}
-        <div className="text-xs sm:text-sm text-slate-400 font-mono font-medium pr-2">
+        <div className="text-xs sm:text-sm text-slate-400 font-mono font-medium pr-2" aria-live="polite">
           Page {currentPage} of {totalPages}
         </div>
       </div>
@@ -159,14 +165,15 @@ export default function PracticeArenaScreen({
             const isCorrect = isAnswered && userAnswer === q.correctIndex;
 
             return (
-              <div
+              <article
                 key={q.id}
+                aria-labelledby={`q-title-${q.id}`}
                 className="bg-cosmic-900/90 rounded-3xl border border-cosmic-750 p-5 sm:p-7 space-y-4 shadow-xl shadow-black/30 hover:border-cosmic-700 transition"
               >
                 {/* Header */}
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="flex items-center gap-2.5">
-                    <span className="w-8 h-8 rounded-full bg-cosmic-950 border border-cosmic-750 flex items-center justify-center text-xs font-mono font-bold text-slate-200 shrink-0">
+                    <span className="w-8 h-8 rounded-full bg-cosmic-950 border border-cosmic-750 flex items-center justify-center text-xs font-mono font-bold text-slate-200 shrink-0" aria-label={`Question ${globalIndex}`}>
                       {globalIndex}
                     </span>
                     <span
@@ -179,12 +186,12 @@ export default function PracticeArenaScreen({
                       }`}
                     >
                       {q.tier === 1
-                        ? '🟢 Level 1: Understanding'
+                        ? '🟢 Tier 1: Understanding'
                         : q.tier === 2
-                        ? '🟡 Level 2: Exam Style'
-                        : '🔴 Level 3: Hard / Trap'}
+                        ? '🟡 Tier 2: Exam Style'
+                        : '🔴 Tier 3: Hard / Trap'}
                     </span>
-                    <h4 className="text-base sm:text-lg font-bold text-white tracking-tight">
+                    <h4 id={`q-title-${q.id}`} className="text-base sm:text-lg font-bold text-white tracking-tight">
                       <MathView text={q.title} />
                     </h4>
                   </div>
@@ -192,11 +199,11 @@ export default function PracticeArenaScreen({
                   {q.loadLabPayload && (
                     <button
                       onClick={() => onLoadLab(q.loadLabPayload)}
-                      className="btn-arcade px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-neon-cyan/15 border border-neon-cyan/40 text-neon-cyan hover:bg-neon-cyan/25 flex items-center gap-1.5"
-                      title="Load this problem directly into the interactive simulator"
+                      className="btn-arcade px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-neon-cyan/15 border border-neon-cyan/40 text-neon-cyan hover:bg-neon-cyan/25 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-neon-cyan focus:outline-none"
+                      aria-label={`Load problem ${globalIndex} into lab simulator`}
                     >
-                      <Play className="w-3.5 h-3.5 fill-neon-cyan" />
-                      🎮 Load into Lab
+                      <Play className="w-3.5 h-3.5 fill-neon-cyan" aria-hidden="true" />
+                      <span>Load into Lab</span>
                     </button>
                   )}
                 </div>
@@ -207,7 +214,11 @@ export default function PracticeArenaScreen({
                 </div>
 
                 {/* Options Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div
+                  role="radiogroup"
+                  aria-label={`Options for question ${globalIndex}`}
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1"
+                >
                   {q.options.map((opt, optIdx) => {
                     let btnClass = 'bg-cosmic-950/80 border-cosmic-750 text-slate-200 hover:border-cosmic-600';
                     if (isAnswered) {
@@ -223,9 +234,11 @@ export default function PracticeArenaScreen({
                     return (
                       <button
                         key={optIdx}
+                        role="radio"
+                        aria-checked={isAnswered && optIdx === userAnswer}
                         disabled={isAnswered}
                         onClick={() => handleSelectOption(q.id, optIdx, q.correctIndex)}
-                        className={`btn-arcade p-4 rounded-2xl border text-left text-sm font-medium transition flex items-center justify-between ${btnClass}`}
+                        className={`btn-arcade p-4 rounded-2xl border text-left text-sm font-medium transition flex items-center justify-between focus-visible:ring-2 focus-visible:ring-neon-cyan focus:outline-none ${btnClass}`}
                       >
                         <div className="flex items-center gap-3">
                           <span className="w-6 h-6 rounded-full bg-cosmic-900 border border-cosmic-750 flex items-center justify-center text-xs font-mono font-bold text-slate-400 shrink-0">
@@ -236,10 +249,10 @@ export default function PracticeArenaScreen({
                           </span>
                         </div>
                         {isAnswered && optIdx === q.correctIndex && (
-                          <CheckCircle2 className="w-5 h-5 text-neon-mint shrink-0 ml-2" />
+                          <CheckCircle2 className="w-5 h-5 text-neon-mint shrink-0 ml-2" aria-label="Correct answer" />
                         )}
                         {isAnswered && optIdx === userAnswer && optIdx !== q.correctIndex && (
-                          <XCircle className="w-5 h-5 text-neon-pink shrink-0 ml-2" />
+                          <XCircle className="w-5 h-5 text-neon-pink shrink-0 ml-2" aria-label="Incorrect answer" />
                         )}
                       </button>
                     );
@@ -249,6 +262,9 @@ export default function PracticeArenaScreen({
                 {/* Mathematical Explanation Box */}
                 {isAnswered && showExplanation[q.id] && (
                   <div
+                    role="region"
+                    aria-live="polite"
+                    aria-label={`Explanation for question ${globalIndex}`}
                     className={`p-5 rounded-2xl border space-y-2.5 animate-fadeIn ${
                       isCorrect
                         ? 'bg-neon-mint/10 border-neon-mint/40 text-slate-200'
@@ -257,15 +273,15 @@ export default function PracticeArenaScreen({
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-neon-gold flex items-center gap-1.5">
-                        <Sparkles className="w-4 h-4" />
+                        <Sparkles className="w-4 h-4" aria-hidden="true" />
                         {isCorrect ? '🎉 Correct! Step-by-Step Derivation' : '💡 Detailed Mathematical Solution'}
                       </span>
                       <button
                         onClick={() => handleReset(q.id)}
-                        className="btn-arcade text-xs sm:text-sm text-slate-400 hover:text-white flex items-center gap-1 font-semibold"
-                        title="Retry question"
+                        className="btn-arcade text-xs sm:text-sm text-slate-400 hover:text-white flex items-center gap-1 font-semibold focus-visible:ring-2 focus-visible:ring-neon-cyan focus:outline-none"
+                        aria-label={`Retry question ${globalIndex}`}
                       >
-                        <RotateCcw className="w-4 h-4" /> Retry
+                        <RotateCcw className="w-4 h-4" aria-hidden="true" /> Retry
                       </button>
                     </div>
                     <div className="text-sm text-slate-200 leading-relaxed">
@@ -273,7 +289,7 @@ export default function PracticeArenaScreen({
                     </div>
                   </div>
                 )}
-              </div>
+              </article>
             );
           })}
         </div>
@@ -281,20 +297,23 @@ export default function PracticeArenaScreen({
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2 pt-4">
+        <nav aria-label="Practice questions pagination" className="flex items-center justify-center gap-2 pt-4">
           <button
             disabled={currentPage === 1}
             onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-            className="btn-arcade p-2.5 rounded-xl bg-cosmic-900 border border-cosmic-750 text-slate-300 disabled:opacity-40 disabled:pointer-events-none hover:border-cosmic-600"
+            className="btn-arcade p-2.5 rounded-xl bg-cosmic-900 border border-cosmic-750 text-slate-300 disabled:opacity-40 disabled:pointer-events-none hover:border-cosmic-600 focus-visible:ring-2 focus-visible:ring-neon-cyan focus:outline-none"
+            aria-label="Previous page"
           >
-            <ChevronLeft className="w-5 h-5" />
+            <ChevronLeft className="w-5 h-5" aria-hidden="true" />
           </button>
 
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
             <button
               key={pageNum}
               onClick={() => setCurrentPage(pageNum)}
-              className={`btn-arcade w-10 h-10 rounded-xl border text-sm font-mono font-bold transition ${
+              aria-label={`Page ${pageNum}`}
+              aria-current={currentPage === pageNum ? 'page' : undefined}
+              className={`btn-arcade w-10 h-10 rounded-xl border text-sm font-mono font-bold transition focus-visible:ring-2 focus-visible:ring-neon-cyan focus:outline-none ${
                 currentPage === pageNum
                   ? 'bg-neon-purple text-white border-neon-purple shadow-glow-purple'
                   : 'bg-cosmic-900 border-cosmic-750 text-slate-400 hover:text-white'
@@ -307,11 +326,12 @@ export default function PracticeArenaScreen({
           <button
             disabled={currentPage === totalPages}
             onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-            className="btn-arcade p-2.5 rounded-xl bg-cosmic-900 border border-cosmic-750 text-slate-300 disabled:opacity-40 disabled:pointer-events-none hover:border-cosmic-600"
+            className="btn-arcade p-2.5 rounded-xl bg-cosmic-900 border border-cosmic-750 text-slate-300 disabled:opacity-40 disabled:pointer-events-none hover:border-cosmic-600 focus-visible:ring-2 focus-visible:ring-neon-cyan focus:outline-none"
+            aria-label="Next page"
           >
-            <ChevronRight className="w-5 h-5" />
+            <ChevronRight className="w-5 h-5" aria-hidden="true" />
           </button>
-        </div>
+        </nav>
       )}
     </div>
   );

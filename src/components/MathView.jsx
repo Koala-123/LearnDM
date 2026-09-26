@@ -40,6 +40,7 @@ export default function MathView({ math, display = false, text, children, classN
         return katex.renderToString(String(math), {
           displayMode: display,
           throwOnError: false,
+          output: 'htmlAndMathml',
         });
       } catch (err) {
         console.error('KaTeX error:', err);
@@ -50,57 +51,119 @@ export default function MathView({ math, display = false, text, children, classN
     // 2. Mixed text or children
     const rawContent = text !== undefined && text !== null ? text : children;
     if (rawContent !== undefined && rawContent !== null) {
-      const content = normalizeMixedMath(rawContent);
+      let str = normalizeMixedMath(rawContent);
 
-      // Split on $$...$$, $...$, \[...\], \(...\)
+      // Extract all math delimiters into placeholders so math doesn't split markdown tags
+      const mathTokens = [];
+      const tokenPrefix = 'XKMATHX';
+      const tokenSuffix = 'XENDKMATHX';
+
+      // Delimiters: $$...$$, $...$, \[...\], \(...\)
       const delimiterRegex = /(\$\$[\s\S]+?\$\$|\$[^\$]+?\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\))/g;
-      const parts = content.split(delimiterRegex);
 
-      return parts
-        .map((part) => {
-          if (!part) return '';
+      str = str.replace(delimiterRegex, (match) => {
+        const index = mathTokens.length;
+        let rawMath = '';
+        let isBlockMath = false;
 
-          // Display math: $$...$$ or \[...\]
-          if ((part.startsWith('$$') && part.endsWith('$$')) || (part.startsWith('\\[') && part.endsWith('\\]'))) {
-            const rawMath = part.slice(2, -2).trim();
-            try {
-              return katex.renderToString(rawMath, { displayMode: true, throwOnError: false });
-            } catch {
-              return `<span class="text-rose-400 font-mono">${rawMath}</span>`;
-            }
-          }
+        if (match.startsWith('$$') && match.endsWith('$$')) {
+          rawMath = match.slice(2, -2).trim();
+          isBlockMath = true;
+        } else if (match.startsWith('\\[') && match.endsWith('\\]')) {
+          rawMath = match.slice(2, -2).trim();
+          isBlockMath = true;
+        } else if (match.startsWith('$') && match.endsWith('$')) {
+          rawMath = match.slice(1, -1).trim();
+          isBlockMath = false;
+        } else if (match.startsWith('\\(') && match.endsWith('\\)')) {
+          rawMath = match.slice(2, -2).trim();
+          isBlockMath = false;
+        }
 
-          // Inline math: $...$ or \(...\)
-          if ((part.startsWith('$') && part.endsWith('$')) || (part.startsWith('\\(') && part.endsWith('\\)'))) {
-            const rawMath = part.slice(part.startsWith('$') ? 1 : 2, part.endsWith('$') ? -1 : -2).trim();
-            try {
-              return katex.renderToString(rawMath, { displayMode: false, throwOnError: false });
-            } catch {
-              return `<span class="text-rose-400 font-mono">${rawMath}</span>`;
-            }
-          }
+        try {
+          const rendered = katex.renderToString(rawMath, {
+            displayMode: isBlockMath || display,
+            throwOnError: false,
+            output: 'htmlAndMathml',
+          });
+          mathTokens.push(rendered);
+        } catch {
+          mathTokens.push(`<span class="text-rose-400 font-mono">${rawMath}</span>`);
+        }
 
-          // Plain text segment: basic markdown bold/italics and HTML escaping
-          let formatted = part
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\*([^*\n]+?)\*/g, '<em>$1</em>')
-            .replace(/`([^`\n]+?)`/g, '<code class="px-1.5 py-0.5 rounded bg-cosmic-950/80 text-neon-cyan font-mono text-xs font-semibold">$1</code>')
-            .replace(/\n/g, '<br/>');
+        return `${tokenPrefix}${index}${tokenSuffix}`;
+      });
 
-          return formatted;
-        })
-        .join('');
+      // Escape HTML entities in text (safe because placeholders are purely alphanumeric)
+      str = str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
+      // Process Markdown on the string with intact tokens:
+      // Bold: **text** or __text__
+      str = str.replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>');
+      str = str.replace(/__([^_]+?)__/g, '<strong>$1</strong>');
+
+      // Italic: *text* or _text_ (using negative lookbehind and lookahead to avoid bold collisions)
+      str = str.replace(/(?<!\*)\*([^*\n]+?)\*(?!\*)/g, '<em>$1</em>');
+      str = str.replace(/(?<!_)_([^_\n]+?)_(?!_)/g, '<em>$1</em>');
+
+      // Strikethrough: ~~text~~
+      str = str.replace(/~~([^~]+?)~~/g, '<del>$1</del>');
+
+      // Inline code: `code`
+      str = str.replace(/`([^`\n]+?)`/g, '<code class="px-1.5 py-0.5 rounded bg-cosmic-950/80 text-neon-cyan font-mono text-xs font-semibold">$1</code>');
+
+      // Process list bullets and numbers at line start while preserving indentation
+      const lines = str.split('\n');
+      const formattedLines = lines.map((line) => {
+        // Leading indentation
+        const indentMatch = line.match(/^(\s+)(.*)$/);
+        let leadingSpaces = 0;
+        let restOfLine = line;
+        if (indentMatch) {
+          leadingSpaces = indentMatch[1].length;
+          restOfLine = indentMatch[2];
+        }
+
+        const indentHtml = leadingSpaces > 0 ? '&nbsp;'.repeat(leadingSpaces * 2) : '';
+
+        // Bullet points: • or - or *
+        const bulletMatch = restOfLine.match(/^(•|-|\*)\s+(.*)$/);
+        if (bulletMatch) {
+          return `${indentHtml}<span class="text-neon-cyan font-bold mr-1.5">•</span>${bulletMatch[2]}`;
+        }
+
+        // Numbered list items: e.g. 1. or 2.
+        const numMatch = restOfLine.match(/^(\d+)\.\s+(.*)$/);
+        if (numMatch) {
+          return `${indentHtml}<span class="font-mono text-neon-cyan font-bold mr-1.5">${numMatch[1]}.</span>${numMatch[2]}`;
+        }
+
+        return indentHtml + restOfLine;
+      });
+
+      str = formattedLines.join('<br/>');
+
+      // Restore all math tokens back into the HTML
+      const tokenRestoreRegex = new RegExp(`${tokenPrefix}(\\d+)${tokenSuffix}`, 'g');
+      str = str.replace(tokenRestoreRegex, (_, indexStr) => {
+        const idx = parseInt(indexStr, 10);
+        return mathTokens[idx] || '';
+      });
+
+      return str;
     }
 
     return '';
   }, [math, display, text, children]);
 
+  const Component = display ? 'div' : 'span';
+
   return (
-    <span
-      className={`inline-block ${className}`}
+    <Component
+      className={`${display ? 'block w-full' : 'inline'} ${className}`}
       dangerouslySetInnerHTML={{ __html: renderedHtml }}
     />
   );

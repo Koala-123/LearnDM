@@ -26,7 +26,6 @@ export default function InteractiveLabScreen({
   topic,
   labPayload,
   onLoadLabPayload,
-  onAddXp,
 }) {
   const [selectedQuestOption, setSelectedQuestOption] = useState(null);
   const [isQuestSubmitted, setIsQuestSubmitted] = useState(false);
@@ -47,7 +46,6 @@ export default function InteractiveLabScreen({
 
     if (idx === topic.quickQuest.correctIndex) {
       setQuestSolved(true);
-      if (onAddXp) onAddXp(50);
       confetti({
         particleCount: 50,
         spread: 60,
@@ -190,15 +188,18 @@ export default function InteractiveLabScreen({
       </div>
 
       {/* ========================================================================= */}
-      {/* 3. GAMIFIED QUICK QUEST MINI-CARD                                        */}
+      {/* 3. QUICK QUEST MINI-CARD                                                  */}
       {/* ========================================================================= */}
       {topic.quickQuest && (
-        <div className="rounded-3xl bg-gradient-to-r from-cosmic-900 via-cosmic-850 to-cosmic-900 border border-neon-pink/30 p-5 sm:p-7 shadow-xl space-y-4">
+        <section
+          aria-label="Interactive Quick Quest Challenge"
+          className="rounded-3xl bg-gradient-to-r from-cosmic-900 via-cosmic-850 to-cosmic-900 border border-neon-pink/30 p-5 sm:p-7 shadow-xl space-y-4"
+        >
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-neon-pink/20 text-neon-pink border border-neon-pink/40 flex items-center gap-1.5 shadow-glow-pink">
-                <Sparkles className="w-3.5 h-3.5" />
-                ⚡ QUICK QUEST (+50 XP)
+                <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
+                ⚡ QUICK QUEST
               </span>
               <span className="text-xs sm:text-sm font-semibold text-slate-300">
                 Instant Concept Check
@@ -208,10 +209,11 @@ export default function InteractiveLabScreen({
             {topic.quickQuest.loadPayload && (
               <button
                 onClick={() => onLoadLabPayload(topic.quickQuest.loadPayload)}
-                className="btn-arcade px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-bold bg-neon-cyan/20 border border-neon-cyan/40 text-neon-cyan hover:bg-neon-cyan/30 flex items-center gap-1.5"
+                className="btn-arcade px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-bold bg-neon-cyan/20 border border-neon-cyan/40 text-neon-cyan hover:bg-neon-cyan/30 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-neon-cyan focus:outline-none"
+                aria-label="Load problem parameters directly into simulator"
               >
-                <Play className="w-3.5 h-3.5 fill-neon-cyan" />
-                🎮 Load Parameters into Lab
+                <Play className="w-3.5 h-3.5 fill-neon-cyan" aria-hidden="true" />
+                <span>Load Parameters into Lab</span>
               </button>
             )}
           </div>
@@ -220,7 +222,11 @@ export default function InteractiveLabScreen({
             <MathView text={topic.quickQuest.question} />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div
+            role="radiogroup"
+            aria-label="Quick quest multiple choice options"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+          >
             {topic.quickQuest.options.map((opt, optIdx) => {
               let btnClass = 'bg-cosmic-950/80 border-cosmic-750 text-slate-200 hover:border-cosmic-600';
               if (isQuestSubmitted) {
@@ -236,9 +242,11 @@ export default function InteractiveLabScreen({
               return (
                 <button
                   key={optIdx}
+                  role="radio"
+                  aria-checked={isQuestSubmitted && selectedQuestOption === optIdx}
                   disabled={isQuestSubmitted}
                   onClick={() => handleQuestSelect(optIdx)}
-                  className={`btn-arcade p-4 rounded-2xl border text-left text-sm font-medium transition flex items-center justify-between ${btnClass}`}
+                  className={`btn-arcade p-4 rounded-2xl border text-left text-sm font-medium transition flex items-center justify-between focus-visible:ring-2 focus-visible:ring-neon-cyan focus:outline-none ${btnClass}`}
                 >
                   <div className="flex items-center gap-3">
                     <span className="w-6 h-6 rounded-full bg-cosmic-900 border border-cosmic-750 flex items-center justify-center text-xs font-mono font-bold text-slate-400 shrink-0">
@@ -249,10 +257,10 @@ export default function InteractiveLabScreen({
                     </span>
                   </div>
                   {isQuestSubmitted && optIdx === topic.quickQuest.correctIndex && (
-                    <CheckCircle2 className="w-5 h-5 text-neon-mint shrink-0 ml-2" />
+                    <CheckCircle2 className="w-5 h-5 text-neon-mint shrink-0 ml-2" aria-label="Correct answer" />
                   )}
                   {isQuestSubmitted && optIdx === selectedQuestOption && optIdx !== topic.quickQuest.correctIndex && (
-                    <XCircle className="w-5 h-5 text-neon-pink shrink-0 ml-2" />
+                    <XCircle className="w-5 h-5 text-neon-pink shrink-0 ml-2" aria-label="Incorrect answer" />
                   )}
                 </button>
               );
@@ -260,19 +268,25 @@ export default function InteractiveLabScreen({
           </div>
 
           {isQuestSubmitted && (
-            <div className={`p-5 rounded-2xl border space-y-2.5 animate-fadeIn ${
-              questSolved ? 'bg-neon-mint/10 border-neon-mint/40 text-slate-200' : 'bg-neon-purple/10 border-neon-purple/40 text-slate-200'
-            }`}>
+            <div
+              role="region"
+              aria-live="polite"
+              aria-label="Solution explanation and derivation"
+              className={`p-5 rounded-2xl border space-y-2.5 animate-fadeIn ${
+                questSolved ? 'bg-neon-mint/10 border-neon-mint/40 text-slate-200' : 'bg-neon-purple/10 border-neon-purple/40 text-slate-200'
+              }`}
+            >
               <div className="flex items-center justify-between">
                 <span className="text-xs sm:text-sm font-bold text-neon-gold uppercase tracking-wider flex items-center gap-1.5">
-                  <Sparkles className="w-4 h-4" />
-                  {questSolved ? '🎉 Correct! +50 XP Earned' : '💡 Explanation & Derivation'}
+                  <Sparkles className="w-4 h-4" aria-hidden="true" />
+                  {questSolved ? '🎉 Correct! Step-by-Step Derivation' : '💡 Explanation & Derivation'}
                 </span>
                 <button
                   onClick={resetQuest}
-                  className="btn-arcade text-xs sm:text-sm text-slate-400 hover:text-white flex items-center gap-1 font-semibold"
+                  className="btn-arcade text-xs sm:text-sm text-slate-400 hover:text-white flex items-center gap-1 font-semibold focus-visible:ring-2 focus-visible:ring-neon-cyan focus:outline-none"
+                  aria-label="Retry quick quest"
                 >
-                  <RotateCcw className="w-4 h-4" /> Retry
+                  <RotateCcw className="w-4 h-4" aria-hidden="true" /> Retry
                 </button>
               </div>
               <div className="text-sm text-slate-200 leading-relaxed">
@@ -280,7 +294,7 @@ export default function InteractiveLabScreen({
               </div>
             </div>
           )}
-        </div>
+        </section>
       )}
     </div>
   );

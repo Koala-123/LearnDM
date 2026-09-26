@@ -63,7 +63,7 @@ export default function ProofRecurrenceLab({ initialData }) {
       step: 'For $n = k+1$: $(k+1)^3 - (k+1) = (k^3 + 3k^2 + 3k + 1) - (k + 1) = (k^3 - k) + 3(k^2 + k) = 3m + 3(k^2 + k) = 3[m + k^2 + k]$. Since this is an explicit multiple of 3, $P(k+1)$ is True.',
     },
     inequality: {
-      title: 'Exponential vs Linear Inequality',
+      title: 'Exponential versus Quadratic Inequality',
       theorem: '2^n > n^2 \\quad \\forall n \\ge 5',
       baseCase: 'For $n = 5$: $2^5 = 32 > 5^2 = 25$. Verified.',
       hyp: 'Assume $2^k > k^2$ for some $k \\ge 5$.',

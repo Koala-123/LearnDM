@@ -67,6 +67,7 @@ export default function PracticeArenaScreen({
   const [showExplanation, setShowExplanation] = useState({}); // { [qId]: boolean }
   const [msqSelections, setMsqSelections] = useState({}); // { [qId]: number[] }
   const [natInputs, setNatInputs] = useState({}); // { [qId]: string }
+  const [mcqWrongAttempts, setMcqWrongAttempts] = useState({}); // { [qId]: number[] }
 
   const questions = QUESTIONS_DATA.filter((q) => q.unitId === topicId);
 
@@ -103,15 +104,29 @@ export default function PracticeArenaScreen({
     });
   };
 
-  // --- Handlers for MCQ ---
-  const handleSelectMcq = (qId, optionIdx, correctIdx) => {
+  // --- Handlers for MCQ (n - 1 attempts allowed before revealing correct answer) ---
+  const handleSelectMcq = (q, optionIdx) => {
+    const qId = q.id;
     if (userAnswers[qId] !== undefined) return;
 
-    setUserAnswers((prev) => ({ ...prev, [qId]: optionIdx }));
-    setShowExplanation((prev) => ({ ...prev, [qId]: true }));
+    const wrongList = mcqWrongAttempts[qId] || [];
+    if (wrongList.includes(optionIdx)) return;
 
-    if (optionIdx === correctIdx) {
+    const maxAttempts = Math.max(1, q.options.length - 1);
+
+    if (optionIdx === q.correctIndex) {
+      setUserAnswers((prev) => ({ ...prev, [qId]: optionIdx }));
+      setShowExplanation((prev) => ({ ...prev, [qId]: true }));
       triggerConfetti();
+    } else {
+      const updatedWrong = [...wrongList, optionIdx];
+      setMcqWrongAttempts((prev) => ({ ...prev, [qId]: updatedWrong }));
+
+      // If user exhausts all n - 1 attempts without picking correct option, reveal solution
+      if (updatedWrong.length >= maxAttempts) {
+        setUserAnswers((prev) => ({ ...prev, [qId]: optionIdx }));
+        setShowExplanation((prev) => ({ ...prev, [qId]: true }));
+      }
     }
   };
 
@@ -167,6 +182,11 @@ export default function PracticeArenaScreen({
       return copy;
     });
     setShowExplanation((prev) => {
+      const copy = { ...prev };
+      delete copy[qId];
+      return copy;
+    });
+    setMcqWrongAttempts((prev) => {
       const copy = { ...prev };
       delete copy[qId];
       return copy;
@@ -394,54 +414,129 @@ export default function PracticeArenaScreen({
                 </div>
 
                 {/* ========================================================= */}
-                {/* 1. MCQ Single Choice Radio View                          */}
+                {/* 1. MCQ Single Choice Radio View (n-1 Attempts Allowed)     */}
                 {/* ========================================================= */}
-                {qType === 'mcq' && (
-                  <div
-                    role="radiogroup"
-                    aria-label={`Options for question ${globalIndex}`}
-                    className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1"
-                  >
-                    {q.options.map((opt, optIdx) => {
-                      let btnClass = 'bg-cosmic-950/80 border-cosmic-750 text-slate-200 hover:border-cosmic-600';
-                      if (isAnswered) {
-                        if (optIdx === q.correctIndex) {
-                          btnClass = 'bg-neon-mint/20 border-neon-mint text-neon-mint font-bold shadow-glow-mint';
-                        } else if (optIdx === userAnswer) {
-                          btnClass = 'bg-neon-pink/20 border-neon-pink text-neon-pink';
-                        } else {
-                          btnClass = 'bg-cosmic-950/40 border-cosmic-750/40 text-slate-600 opacity-50';
-                        }
-                      }
+                {qType === 'mcq' && (() => {
+                  const wrongAttempts = mcqWrongAttempts[q.id] || [];
+                  const maxAttempts = Math.max(1, q.options.length - 1);
+                  const attemptsLeft = Math.max(0, maxAttempts - wrongAttempts.length);
+                  const isExhausted = isAnswered && !isCorrect;
+                  const isInProgress = !isAnswered && wrongAttempts.length > 0;
 
-                      return (
-                        <button
-                          key={optIdx}
-                          role="radio"
-                          aria-checked={isAnswered && optIdx === userAnswer}
-                          disabled={isAnswered}
-                          onClick={() => handleSelectMcq(q.id, optIdx, q.correctIndex)}
-                          className={`btn-arcade p-4 rounded-2xl border text-left text-sm font-medium transition flex items-center justify-between focus-visible:ring-2 focus-visible:ring-neon-cyan focus:outline-none ${btnClass}`}
+                  return (
+                    <div className="space-y-3 pt-1">
+                      {/* Attempts Status Alert */}
+                      {isInProgress && (
+                        <div
+                          role="status"
+                          aria-live="polite"
+                          className="px-4 py-2.5 rounded-2xl bg-neon-pink/15 border border-neon-pink/40 text-xs sm:text-sm font-semibold text-rose-200 flex flex-wrap items-center justify-between gap-2 animate-fadeIn shadow-glow-pink"
                         >
-                          <div className="flex items-center gap-3">
-                            <span className="w-6 h-6 rounded-full bg-cosmic-900 border border-cosmic-750 flex items-center justify-center text-xs font-mono font-bold text-slate-400 shrink-0">
-                              {String.fromCharCode(65 + optIdx)}
-                            </span>
-                            <span className="leading-snug">
-                              <MathView text={opt} />
-                            </span>
+                          <div className="flex items-center gap-2">
+                            <XCircle className="w-4 h-4 text-neon-pink shrink-0" aria-hidden="true" />
+                            <span>Incorrect choice. Try another option!</span>
                           </div>
-                          {isAnswered && optIdx === q.correctIndex && (
-                            <CheckCircle2 className="w-5 h-5 text-neon-mint shrink-0 ml-2" aria-label="Correct answer" />
-                          )}
-                          {isAnswered && optIdx === userAnswer && optIdx !== q.correctIndex && (
-                            <XCircle className="w-5 h-5 text-neon-pink shrink-0 ml-2" aria-label="Incorrect answer" />
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
+                          <span className="font-mono text-neon-gold font-bold px-2.5 py-0.5 rounded-full bg-cosmic-950/80 border border-cosmic-750">
+                            {attemptsLeft} attempt{attemptsLeft === 1 ? '' : 's'} remaining
+                          </span>
+                        </div>
+                      )}
+
+                      {isExhausted && (
+                        <div
+                          role="status"
+                          aria-live="polite"
+                          className="px-4 py-2.5 rounded-2xl bg-amber-500/15 border border-amber-500/40 text-xs sm:text-sm font-semibold text-amber-200 flex flex-wrap items-center justify-between gap-2 animate-fadeIn"
+                        >
+                          <div className="flex items-center gap-2">
+                            <AlertCircle className="w-4 h-4 text-neon-gold shrink-0" aria-hidden="true" />
+                            <span>All {maxAttempts} attempts used. Correct answer revealed below.</span>
+                          </div>
+                          <span className="font-mono text-xs text-amber-300 font-bold px-2.5 py-0.5 rounded-full bg-cosmic-950/80 border border-cosmic-750">
+                            0 attempts left
+                          </span>
+                        </div>
+                      )}
+
+                      {!isAnswered && !isInProgress && (
+                        <div className="flex items-center justify-between text-xs text-slate-400 font-mono px-1">
+                          <span>Single Choice</span>
+                          <span>
+                            {maxAttempts} attempt{maxAttempts === 1 ? '' : 's'} allowed
+                          </span>
+                        </div>
+                      )}
+
+                      <div
+                        role="radiogroup"
+                        aria-label={`Options for question ${globalIndex}`}
+                        className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+                      >
+                        {q.options.map((opt, optIdx) => {
+                          const isWrongAttempt = wrongAttempts.includes(optIdx);
+                          const isCorrectOption = optIdx === q.correctIndex;
+
+                          let btnClass = 'bg-cosmic-950/80 border-cosmic-750 text-slate-200 hover:border-cosmic-600';
+                          let isDisabled = false;
+
+                          if (isAnswered) {
+                            isDisabled = true;
+                            if (isCorrect) {
+                              if (isCorrectOption) {
+                                btnClass = 'bg-neon-mint/20 border-neon-mint text-neon-mint font-bold shadow-glow-mint';
+                              } else if (isWrongAttempt) {
+                                btnClass = 'bg-neon-pink/20 border-neon-pink text-neon-pink opacity-70';
+                              } else {
+                                btnClass = 'bg-cosmic-950/40 border-cosmic-750/40 text-slate-600 opacity-50';
+                              }
+                            } else {
+                              // Attempts exhausted
+                              if (isCorrectOption) {
+                                btnClass = 'bg-neon-mint/20 border-neon-mint text-neon-mint font-bold shadow-glow-mint';
+                              } else if (isWrongAttempt) {
+                                btnClass = 'bg-neon-pink/20 border-neon-pink text-neon-pink';
+                              } else {
+                                btnClass = 'bg-cosmic-950/40 border-cosmic-750/40 text-slate-600 opacity-50';
+                              }
+                            }
+                          } else {
+                            // In progress or untouched
+                            if (isWrongAttempt) {
+                              isDisabled = true;
+                              btnClass = 'bg-neon-pink/15 border-neon-pink/40 text-neon-pink/70 cursor-not-allowed';
+                            }
+                          }
+
+                          return (
+                            <button
+                              key={optIdx}
+                              role="radio"
+                              aria-checked={isAnswered && (isCorrect ? isCorrectOption : isWrongAttempt)}
+                              disabled={isDisabled}
+                              onClick={() => handleSelectMcq(q, optIdx)}
+                              className={`btn-arcade p-4 rounded-2xl border text-left text-sm font-medium transition flex items-center justify-between focus-visible:ring-2 focus-visible:ring-neon-cyan focus:outline-none ${btnClass}`}
+                            >
+                              <div className="flex items-center gap-3">
+                                <span className="w-6 h-6 rounded-full bg-cosmic-900 border border-cosmic-750 flex items-center justify-center text-xs font-mono font-bold text-slate-400 shrink-0">
+                                  {String.fromCharCode(65 + optIdx)}
+                                </span>
+                                <span className="leading-snug">
+                                  <MathView text={opt} />
+                                </span>
+                              </div>
+                              {isAnswered && isCorrectOption && (
+                                <CheckCircle2 className="w-5 h-5 text-neon-mint shrink-0 ml-2" aria-label="Correct answer" />
+                              )}
+                              {isWrongAttempt && (
+                                <XCircle className="w-5 h-5 text-neon-pink shrink-0 ml-2" aria-label="Incorrect answer" />
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })()}
 
                 {/* ========================================================= */}
                 {/* 2. MSQ Multi-Select Checkbox View                         */}
